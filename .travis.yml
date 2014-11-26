@@ -7,6 +7,7 @@ env:
   - default_branch_scenario="published/subcountry2014"
   - study_area="Chile"
   - secure: Ma5baMrBhVGZSfg230gPdb03CqHr7/ZxSYJn299deuptS1OvXbIZMArjdw6KrWOMJhmC+3KeW4xmthji2ZlQk2d4qaTtlh67UvHNYXKFvYT+LB+ATmwW/1jTjh6ZAwLZAcxQ/iTHPi+sT+i3ckBj+xMX+lJcKttZZt6hZkWHFg8=
+  - secure: fp722nMMD+pXCkPPn0vTv63RGJ9dYzKTy348E5psN+kqi4rv/qLN0ENdyqf39GiyODWUM0Vw3jAox35+z3JvUGW0rU0MhFKFigiBd/0TREaJs+EJlTvHRZrE+VsC/63tsM14VprOzDEh5ChoM33728AjNOnxTl1Yr40JXYNNGe4=
 matrix:
   fast_finish: true
 before_install:
