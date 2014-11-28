@@ -4,7 +4,7 @@
 
 Data sources:
 
-- [Reefs at Risk Revisited](www.wri.org/publication/reefs-at-risk-revisited) 
+- [Reefs at Risk Revisited](http://www.wri.org/publication/reefs-at-risk-revisited) 
 ","score","pressure score","np_blast_gl2014.csv","equal","global scores were applied equally to each region. ","np_blast","~/github/ohi-global/eez2014/layers/np_blast.csv","global","rgn_id",,,,"score",,TRUE,,,,,FALSE,,,,12,TRUE
 "NP","np_cyanide","Areas of observed poison fishing","The presence of destructive artisanal poison (cyanide) fishing (Reefs at Risk Revisited).
 
@@ -16,11 +16,11 @@ Data sources:
 
 Data sources:
 
-- [Reefs at Risk Revisited](www.wri.org/publication/reefs-at-risk-revisited) ","pressures.score","pressure score","fp_art_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","fp_art_hb","~/github/ohi-global/eez2014/layers/fp_art_hb.csv","global","rgn_id",,,,"pressures.score",,TRUE,,,,,FALSE,,,,12,TRUE
+- [Reefs at Risk Revisited](http://www.wri.org/publication/reefs-at-risk-revisited) ","pressures.score","pressure score","fp_art_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","fp_art_hb","~/github/ohi-global/eez2014/layers/fp_art_hb.csv","global","rgn_id",,,,"pressures.score",,TRUE,,,,,FALSE,,,,12,TRUE
 "pressures","hd_subtidal_hb","High bycatch artisanal fishing practices as a proxy for subtidal hard bottom habitat destruction","The presence of destructive artisanal blast and poison (cyanide) fishing (Reefs at Risk Revisited).
 
 Data sources:
 
-- [Reefs at Risk Revisited](www.wri.org/publication/reefs-at-risk-revisited) ","value","pressure score","hd_subtidal_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","hd_subtidal_hb","~/github/ohi-global/eez2014/layers/hd_subtidal_hb.csv","global","rgn_id",,,,"value",,TRUE,,,,,FALSE,,,,12,TRUE
+- [Reefs at Risk Revisited](http://www.wri.org/publication/reefs-at-risk-revisited) ","value","pressure score","hd_subtidal_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","hd_subtidal_hb","~/github/ohi-global/eez2014/layers/hd_subtidal_hb.csv","global","rgn_id",,,,"value",,TRUE,,,,,FALSE,,,,12,TRUE
 "pressures CP","cp_habitat_extent_rank","Habitat extent * rank, per Coastal Protection habitats","Habitat extent * habitat rank for Coastal Protection habitats: coral, mangrove offshore 1km, mangrove inland 1km, saltmarsh, seaice_shoreline and seagrass","extent_rank","rank","cp_habitat_extent_rank_gl2014.csv","equal","global pressures data were applied equally to all regions.","cp_habitat_extent_rank","~/github/ohi-global/eez2014/layers/cp_habitat_extent_rank.csv","global","rgn_id",,"habitat",,"extent_rank",,TRUE,,,,,FALSE,,,,12,TRUE
 "pressures CS","cs_habitat_extent","Habitat extent * rank, per Carbon Storage habitats","Habitat extent * habitat rank for Carbon Storage habitats: mangrove, saltmarsh and seagrass","km2","km^2","cs_habitat_extent_gl2014.csv","area_offshore_3nm","global habitat extent was applied to each region after weighting by each region's offshore area to 3nm. ","cs_habitat_extent","~/github/ohi-global/eez2014/layers/cs_habitat_extent.csv","global","rgn_id",,"habitat",,"km2",,TRUE,,,,,FALSE,,,,12,TRUE

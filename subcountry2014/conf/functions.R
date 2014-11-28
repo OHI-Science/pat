@@ -364,10 +364,15 @@ ry_ref = ry %>%
     yrs = ifelse(x$trend_yrs=='4_yr',
                  (yr_max-5):(yr_max-1), # 4_yr
                  (yr_max-5):(yr_max))   # 5_yr
-    y = subset(x, year %in% yrs)
-    return(data.frame(
-      trend = round(max(min(lm(status ~ year, data=y)$coefficients[['year']] * 5, 1), -1), 2)))  
-    })
+    y = subset(x, year %in% yrs & !is.na(status))
+    # added condition for aus repo since rgns 7 & 9 have no data
+    if (nrow(y) > 1){
+      trend = round(max(min(lm(status ~ year, data=y)$coefficients[['year']] * 5, 1), -1), 2)
+    } else {
+      trend = NA
+    } 
+    return(data.frame(trend)) 
+  })
   
   # return scores
   scores = status %>%
@@ -800,21 +805,28 @@ CP = function(layers){
       extent = ifelse(km2==0, NA, km2))
   
   if (nrow(d) > 0){
-    scores_CP = rbind_list(
-      # status
-      d %>% 
-        filter(!is.na(rank) & !is.na(health) & !is.na(extent)) %>%
-        group_by(rgn_id) %>%
-        summarize(      
-          score = pmin(1, sum(rank * health * extent) / (sum(extent) * max(rank)) ) * 100,
-          dimension = 'status'),
-      # trend
-      d %>% 
-        filter(!is.na(rank) & !is.na(trend) & !is.na(extent)) %>%
-        group_by(rgn_id) %>%
-        summarize(      
-          score = sum(rank * trend * extent) / (sum(extent)* max(rank)),
-          dimension = 'trend')) %>%
+    # status
+    scores_CP = d %>%
+      filter(!is.na(rank) & !is.na(health) & !is.na(extent)) %>%
+      group_by(rgn_id) %>%
+      summarize(
+        score = pmin(1, sum(rank * health * extent) / (sum(extent) * max(rank)) ) * 100,
+        dimension = 'status')
+    
+    # trend
+    d_trend = d %>%
+      filter(!is.na(rank) & !is.na(trend) & !is.na(extent))
+    if (nrow(d_trend) > 0 ){
+      scores_CP = rbind_list(
+        scores_CP,
+        d_trend %>%
+          group_by(rgn_id) %>%
+          summarize(
+            score = sum(rank * trend * extent) / (sum(extent)* max(rank)),
+            dimension = 'trend'))
+    }
+    
+    scores_CP = scores_CP %>%
       mutate(
         goal = 'CP') %>%
       select(region_id=rgn_id, goal, dimension, score)
@@ -851,7 +863,7 @@ TR = function(layers, year_max, debug=FALSE, pct_ref=90){
   # get regions
   rgns = layers$data[[conf$config$layer_region_labels]] %>%
     select(rgn_id, rgn_label = label)
-    
+  
   # merge layers and calculate score
   d = layers$data[['tr_jobs_tourism']] %>%
     select(rgn_id, year, Ed=count) %>%
@@ -875,6 +887,24 @@ TR = function(layers, year_max, debug=FALSE, pct_ref=90){
       Xtr   = E * S ) %>%
     merge(rgns, by='rgn_id') %>%
     select(rgn_id, rgn_label, year, Ed, L, U, S, E, Xtr)
+  
+  # feed NA for subcountry regions without sufficient data (vs global analysis)
+  if (conf$config$layer_region_labels!='rgn_global' & sum(!is.na(d$Xtr))==0) {
+    scores_TR = rbind_list(
+      rgns %>%
+        select(region_id = rgn_id) %>%
+        mutate(
+          goal      = 'TR',
+          dimension = 'status',
+          score     = NA),
+      rgns %>%
+        select(region_id = rgn_id) %>%
+        mutate(
+          goal      = 'TR',
+          dimension = 'trend',
+          score     = NA))
+    return(scores_TR)
+  }
   
 #   if (debug){
 #     # compare with pre-gapfilled data
@@ -931,34 +961,33 @@ TR = function(layers, year_max, debug=FALSE, pct_ref=90){
   # setup data for georegional gapfilling (remove Antarctica rgn_id=213)
   if (!file.exists('temp')) dir.create('temp', recursive=T)
   csv = sprintf('temp/%s_TR_1-gapfill-georegions.csv', basename(getwd()))
-  d_g = gapfill_georegions(
-    data              = d %>%
-      filter(rgn_id!=213) %>%
-      select(rgn_id, year, Xtr),
-    fld_id            = 'rgn_id',
-    fld_value         = 'Xtr',
-    fld_weight        = NULL,
-    georegions        = georegions,    
-    ratio_weights     = FALSE,
-    georegion_labels  = georegion_labels,
-    r0_to_NA          = TRUE, 
-    attributes_csv    = csv)
-  
-  # regions with Travel Warnings at http://travel.state.gov/content/passports/english/alertswarnings.html
-  rgn_travel_warnings = c('Djibouti'=46, 'Eritrea'=45, 'Somalia'=44, 'Mauritania'=64)
-  # TODO: check if regions with travel warnings are gapfilled (manually checked for 2013)
-  d_g = rbind_list(
-    d_g %>%
-      filter(!rgn_id %in% rgn_travel_warnings),
-    d_g %>%
-      filter(rgn_id %in% rgn_travel_warnings) %>%
-      mutate(
-        Xtr = 0.1 * Xtr))
-  # read.csv(csv) %>%
-  #   filter(r1_label=='Africa' & yr==year_max) %>%
-  #   select(v) %>% colMeans(na.rm=T) # Africa average: 0.021
-  # South Africa: 0.027 -> 42.79
-  # Namibia: 	    0.015 -> 23.06  
+  if (conf$config$layer_region_labels=='rgn_global'){
+    d_g = gapfill_georegions(
+      data              = d %>%
+        filter(rgn_id!=213) %>%
+        select(rgn_id, year, Xtr),
+      fld_id            = 'rgn_id',
+      fld_value         = 'Xtr',
+      fld_weight        = NULL,
+      georegions        = georegions,    
+      ratio_weights     = FALSE,
+      georegion_labels  = georegion_labels,
+      r0_to_NA          = TRUE, 
+      attributes_csv    = csv)
+    
+    # regions with Travel Warnings at http://travel.state.gov/content/passports/english/alertswarnings.html
+    rgn_travel_warnings = c('Djibouti'=46, 'Eritrea'=45, 'Somalia'=44, 'Mauritania'=64)
+    # TODO: check if regions with travel warnings are gapfilled (manually checked for 2013)
+    d_g = rbind_list(
+      d_g %>%
+        filter(!rgn_id %in% rgn_travel_warnings),
+      d_g %>%
+        filter(rgn_id %in% rgn_travel_warnings) %>%
+        mutate(
+          Xtr = 0.1 * Xtr))
+  } else {
+    d_g = d
+  }
     
   # filter: limit to 5 intervals (6 years worth of data)
   #   NOTE: original 2012 only used 2006:2010 whereas now we're using 2005:2010
@@ -997,7 +1026,7 @@ TR = function(layers, year_max, debug=FALSE, pct_ref=90){
   if (debug){
     write.csv(d_g_f_r, sprintf('temp/%s_TR_2-filtered-rescaled.csv', basename(getwd())), row.names=F, na='')
   }
-  
+    
   # calculate trend
   d_t = d_g_f_r %>%
     filter(!is.na(Xtr_rmax)) %>%
@@ -1021,15 +1050,17 @@ TR = function(layers, year_max, debug=FALSE, pct_ref=90){
   d_b = rbind(d_t, d_s) %>%
     mutate(goal = 'TR')  
   
-  # assign NA for uninhabitated islands
-  unpopulated = layers$data[['le_popn']] %>%
-    group_by(rgn_id) %>%
-    filter(count==0) %>%
-    select(rgn_id)
-  d_b$score = ifelse(d_b$rgn_id %in% unpopulated$rgn_id, NA, d_b$score)  
-
-  # replace North Korea value with 0
-  d_b$score[d_b$rgn_id == 21] = 0
+  if (conf$config$layer_region_labels=='rgn_global'){
+    # assign NA for uninhabitated islands
+    unpopulated = layers$data[['le_popn']] %>%
+      group_by(rgn_id) %>%
+      filter(count==0) %>%
+      select(rgn_id)
+    d_b$score = ifelse(d_b$rgn_id %in% unpopulated$rgn_id, NA, d_b$score)  
+  
+    # replace North Korea value with 0
+    d_b$score[d_b$rgn_id == 21] = 0
+  }
   
   # final scores
   scores = d_b %>%

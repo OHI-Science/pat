@@ -24,7 +24,7 @@ Data sources:
 
 Data sources:
 
-- [World Health Organization and United Nations Children's Fund's Joint Monitoring Programme (WHO/UNICEF's JMP)](www.wssinfo.org/data-estimates/table)
+- [World Health Organization and United Nations Children's Fund's Joint Monitoring Programme (WHO/UNICEF's JMP)](http://www.wssinfo.org/data-estimates/table)
 ","trend","trend score","cw_pathogen_trend_gl2014.csv","equal","global trends were applied equally to all regions.","cw_pathogen_trend","~/github/ohi-global/eez2014/layers/cw_pathogen_trend.csv","global","rgn_id",,,,"trend",,TRUE,,,0.00225872149744139,0.00225872149744139,TRUE,,,,12,FALSE
 "CW","cw_pesticide_trend","Pesticide consumption as a proxy for trend in chemical pollution","Statistics on pesticide consumption from the Food and Agricultural Organization (FAO). 
 
@@ -117,7 +117,7 @@ Data sources:
 
 Data sources:
 
-- [Reefs at Risk Revisited](www.wri.org/publication/reefs-at-risk-revisited) 
+- [Reefs at Risk Revisited](http://www.wri.org/publication/reefs-at-risk-revisited) 
 ","score","pressure score","np_blast_gl2014.csv","equal","global scores were applied equally to each region. ","np_blast","~/github/ohi-global/eez2014/layers/np_blast.csv","global","rgn_id",,,,"score",,TRUE,,,0.182184126332102,0.182184126332102,TRUE,,,,12,FALSE
 "NP","np_cyanide","Areas of observed poison fishing","The presence of destructive artisanal poison (cyanide) fishing (Reefs at Risk Revisited).
 
@@ -168,13 +168,13 @@ Data sources:
 
 Data sources:
 
-- [The World Bank](data.worldbank.org/indicator/SL.TLF.TOTL.IN)
+- [The World Bank](http://data.worldbank.org/indicator/SL.TLF.TOTL.IN)
 ","count","jobs","tr_jobs_total_sc2014-popn-inland25km.csv","population_inland25km","global total labor force data were applied to each region after weighting by each region's coastal population.","tr_jobs_total","~/github/ohi-global/eez2014/layers/tr_jobs_total.csv","global","rgn_id",,,"year","count",,TRUE,1990,2012,38530.1768404137,2529746.68605781,FALSE,,,,12,FALSE
 "TR","tr_jobs_tourism","Direct employment in tourism","Direct employment in tourism (WTTC).
 
 Data sources:
 
-- [World Travel and Tourism Council (WTTC)](www.wttc.org/research/economic-data-search-tool/)
+- [World Travel and Tourism Council (WTTC)](http://www.wttc.org/research/economic-data-search-tool/)
 ","count","jobs","tr_jobs_tourism_sc2014-popn-inland25km.csv","population_inland25km","global tourism employee data were applied to each region after weighting by each region's coastal population.","tr_jobs_tourism","~/github/ohi-global/eez2014/layers/tr_jobs_tourism.csv","global","rgn_id",,,"year","count",,TRUE,1988,2013,532.503132191637,73246.6306934817,FALSE,,,,12,FALSE
 "TR","tr_sustainability","Sustainability index","Tourism Competitiveness Index (TTCI) from the World Economic Forum","score","score","tr_sustainability_gl2014.csv","equal ","global scores were applied equally to each region. ","tr_sustainability","~/github/ohi-global/eez2014/layers/tr_sustainability.csv","global","rgn_id",,,,"score",,TRUE,,,4.29,4.29,FALSE,,,,12,FALSE
 "TR","tr_unemployment","Percent unemployment","Percent unemployment (The World Bank).
@@ -212,7 +212,7 @@ Data sources:
 
 Data sources:
 
-- [Reefs at Risk Revisited](www.wri.org/publication/reefs-at-risk-revisited) ","pressures.score","pressure score","fp_art_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","fp_art_hb","~/github/ohi-global/eez2014/layers/fp_art_hb.csv","global","rgn_id",,,,"pressures.score",,TRUE,,,0.0320958635766238,0.0320958635766238,TRUE,,,,12,FALSE
+- [Reefs at Risk Revisited](http://www.wri.org/publication/reefs-at-risk-revisited) ","pressures.score","pressure score","fp_art_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","fp_art_hb","~/github/ohi-global/eez2014/layers/fp_art_hb.csv","global","rgn_id",,,,"pressures.score",,TRUE,,,0.0320958635766238,0.0320958635766238,TRUE,,,,12,FALSE
 "pressures","fp_art_lb","Low bycatch caused by artisanal fishing ","Modeled low bycatch artisanal fishing using non-destructive practices (Halpern et al. 2008) based on FAO fisheries statistics.
 
 Data sources:
@@ -247,7 +247,7 @@ Data sources:
 
 Data sources:
 
-- [Reefs at Risk Revisited](www.wri.org/publication/reefs-at-risk-revisited) ","value","pressure score","hd_subtidal_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","hd_subtidal_hb","~/github/ohi-global/eez2014/layers/hd_subtidal_hb.csv","global","rgn_id",,,,"value",,TRUE,,,0.0332416853571429,0.0332416853571429,TRUE,,,,12,FALSE
+- [Reefs at Risk Revisited](http://www.wri.org/publication/reefs-at-risk-revisited) ","value","pressure score","hd_subtidal_hb_gl2014.csv","equal","global pressures data were applied equally to all regions.","hd_subtidal_hb","~/github/ohi-global/eez2014/layers/hd_subtidal_hb.csv","global","rgn_id",,,,"value",,TRUE,,,0.0332416853571429,0.0332416853571429,TRUE,,,,12,FALSE
 "pressures","hd_subtidal_sb","High bycatch commercial fishing practices as a proxy for subtidal soft bottom habitat destruction","Spatially distributed commercial catch data by fishing gear type, developed by Sea Around Us Project.
 
 Data sources:
@@ -281,7 +281,7 @@ Data sources:
 
 Data sources:
 
-- [Worldwide Governance Indicators (WGI)](info.worldbank.org/governance/wgi/index.asp)","score","pressure score","ss_wgi_gl2014.csv","equal","global pressures data were applied equally to all regions.","ss_wgi","~/github/ohi-global/eez2014/layers/ss_wgi.csv","global","rgn_id",,,,"score",,TRUE,,,0.262972693023252,0.262972693023252,TRUE,,,,12,FALSE
+- [Worldwide Governance Indicators (WGI)](http://info.worldbank.org/governance/wgi/index.asp)","score","pressure score","ss_wgi_gl2014.csv","equal","global pressures data were applied equally to all regions.","ss_wgi","~/github/ohi-global/eez2014/layers/ss_wgi.csv","global","rgn_id",,,,"score",,TRUE,,,0.262972693023252,0.262972693023252,TRUE,,,,12,FALSE
 "pressures CP","cp_habitat_extent_rank","Habitat extent * rank, per Coastal Protection habitats","Habitat extent * habitat rank for Coastal Protection habitats: coral, mangrove offshore 1km, mangrove inland 1km, saltmarsh, seaice_shoreline and seagrass","extent_rank","rank","cp_habitat_extent_rank_gl2014.csv","equal","global pressures data were applied equally to all regions.","cp_habitat_extent_rank","~/github/ohi-global/eez2014/layers/cp_habitat_extent_rank.csv","global","rgn_id",,"habitat",,"extent_rank",,TRUE,,,1305.44408227957,367968.137254902,FALSE,,,,12,FALSE
 "pressures CS","cs_habitat_extent","Habitat extent * rank, per Carbon Storage habitats","Habitat extent * habitat rank for Carbon Storage habitats: mangrove, saltmarsh and seagrass","km2","km^2","cs_habitat_extent_gl2014.csv","area_offshore_3nm","global habitat extent was applied to each region after weighting by each region's offshore area to 3nm. ","cs_habitat_extent","~/github/ohi-global/eez2014/layers/cs_habitat_extent.csv","global","rgn_id",,"habitat",,"km2",,TRUE,,,1437.8298536701,2729.73319268519,FALSE,,,,12,FALSE
 "pressures CW","po_chemicals","Ocean-based chemical pollution","Modeled ocean-based chemical pollution from commercial shipping traffic and ports and harbors (Halpern et al. 2008).
@@ -300,7 +300,7 @@ Data sources:
 
 Data sources:
 
-- [World Health Organization and United Nations Children's Fund's Joint Monitoring Programme (WHO/UNICEF's JMP)](www.wssinfo.org/data-estimates/table)
+- [World Health Organization and United Nations Children's Fund's Joint Monitoring Programme (WHO/UNICEF's JMP)](http://www.wssinfo.org/data-estimates/table)
 ","pressure_score","pressure score","po_pathogens_gl2014.csv","raster","spatial data was extracted for each region. ","po_pathogens","~/github/ohi-global/eez2014/layers/po_pathogens.csv","global","rgn_id",,,,"pressure_score",,TRUE,,,0.0227906742874084,0.0227906742874084,TRUE,,,,12,FALSE
 "pressures CW","po_trash","Trash pollution","Density of trash from coastal land and sea (Ocean Conservancy). 
 
@@ -416,7 +416,7 @@ Data sources:
 
 Data sources:
 
-- [Worldwide Governance Indicators (WGI)](info.worldbank.org/governance/wgi/index.asp)","score","resilience score","wgi_all_gl2014.csv","equal","global resilience data were applied equally to all regions.","wgi_all","~/github/ohi-global/eez2014/layers/wgi_all.csv","global","rgn_id",,,,"score",,TRUE,,,0.737027306976748,0.737027306976748,TRUE,,,,12,FALSE
+- [Worldwide Governance Indicators (WGI)](http://info.worldbank.org/governance/wgi/index.asp)","score","resilience score","wgi_all_gl2014.csv","equal","global resilience data were applied equally to all regions.","wgi_all","~/github/ohi-global/eez2014/layers/wgi_all.csv","global","rgn_id",,,,"score",,TRUE,,,0.737027306976748,0.737027306976748,TRUE,,,,12,FALSE
 "spatial","rgn_area","Region area of total EEZ ocean","Area of Ocean Health Index regions based on exclusive economic zones (VLIZ 2012). 
 
 Data sources:
