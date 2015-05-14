@@ -4,8 +4,8 @@ branches:
   - draft
 env:
   global:
-  - default_branch_scenario="published/subcountry2014"
-  - study_area="Chile"
+  - default_branch_scenario: "published/subcountry2014"
+  - study_area: "Chile"
   - secure: FMkEWTulxFgugXEem49kJXiNsKz4iTVN/70kbfT/zSF4X0gbt+MEIEHiEbm4HsbeLMJ99y6Fu5ErrehENCLoup/lhHkZEsGPI6RrN2CQJ50KGaArX3/FhLdH32Ky+uGQgZ9zFScoyr90cXiRB7WM2QlEJpRtXNuQ3/EZvcy4Dmk=
 matrix:
   fast_finish: true
