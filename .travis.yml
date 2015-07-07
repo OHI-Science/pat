@@ -1,20 +1,25 @@
 language: c
+
+# blacklist
 branches:
-  only:
-  - draft
+  except:
+    - /.*/
+
 env:
   global:
-  - default_branch_scenario: published/subcountry2014
-  - study_area: Chile
-  - secure: U8QR00dNdX+iM5dlOxrwlMEzvTt+ybwponPaa/ujP4kmA8X4c09maqi9JMHizT/kyOy3VKaZaDGTSJG2c0V8RLP0XEKOOQC4VAVDpniwWtpDnkaVmXXQLVIM8c/cDYIQcdxXjvRmHR8nDgzeGzNH1lOYqsszP+VvF94xZtJ0j5Q=
+  - default_branch_scenario: "published/subcountry2014"
+  - study_area: "Chile"
+
 matrix:
-  fast_finish: true
+  fast_finish: true # finish at first failure
+
 before_install:
 - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
 - curl -OL http://raw.github.com/OHI-Science/ohi-webapps/master/ohi-travis-functions.R
 - chmod 755 ./travis-tool.sh
 - ./travis-tool.sh bootstrap
 - sudo apt-get install pandoc
+
 install:
 - ./travis-tool.sh install_r zoo
 - ./travis-tool.sh install_r psych
@@ -24,15 +29,21 @@ install:
 - ./travis-tool.sh install_r httr
 - ./travis-tool.sh install_r git2r
 - ./travis-tool.sh install_github ohi-science/rCharts
-- ./travis-tool.sh install_github ohi-science/ohicore@dev
+- ./travis-tool.sh install_github ohi-science/ohicore@dev # @master or @2f7a3d7 to specify by commit (https://github.com/OHI-Science/ohicore/commits/master)
 - git config --global user.email "lowndes@nceas.ucsb.edu"
 - git config --global user.name "Julia Lowndes"
+
 script:
-- Rscript ohi-travis-functions.R calculate_scores && Rscript ohi-travis-functions.R
-  create_results && Rscript ohi-travis-functions.R push_branch draft && Rscript ohi-travis-functions.R
-  push_branch published && Rscript ohi-travis-functions.R create_pages
+# execute as a sequence, so if any fail, none of the subsequent commands are executed
+- Rscript ohi-travis-functions.R calculate_scores &&
+  Rscript ohi-travis-functions.R create_results &&
+  Rscript ohi-travis-functions.R push_branch draft &&
+  Rscript ohi-travis-functions.R push_branch published &&
+  Rscript ohi-travis-functions.R create_pages
+
 after_failure:
 - ./travis-tool.sh dump_logs
+
 notifications:
   email:
     recipients:
