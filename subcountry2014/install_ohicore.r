@@ -23,7 +23,7 @@ for (p in c('devtools')){
 
 # install packages
 install_github('ohi-science/rCharts')
-install_github('ohi-science/ohicore@dev')
+install_github('ohi-science/ohicore')
 
 # Note: you will get warning messages like the following; this is nothing to worry about.
 # Warning: replacing previous import by ‘plyr::mutate’ when loading ‘ohicore’
