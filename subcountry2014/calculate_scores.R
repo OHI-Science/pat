@@ -1,8 +1,11 @@
+library(devtools)
+devtools::install_github("ohi-science/ohicore@dev_resil") # when testing changes to ohicore
+
 # load required libraries
 suppressWarnings(require(ohicore))
 
 # set working directory to the scenario directory, ie containing conf and layers directories
-setwd('~/github/chl/subcountry2014')
+setwd('subcountry2014')
 
 # load scenario configuration
 conf = Conf('conf')
@@ -14,5 +17,5 @@ CheckLayers('layers.csv', 'layers', flds_id=conf$config$layers_id_fields)
 layers = Layers('layers.csv', 'layers')
 
 # calculate scenario scores
-scores = CalculateAll(conf, layers, debug=F)
+scores = CalculateAll(conf, layers)
 write.csv(scores, 'scores.csv', na='', row.names=F)

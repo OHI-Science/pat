@@ -9,13 +9,15 @@ resilience_components = list('NP'  = 'np_harvest_product_weight',
                              'CS'  = 'cs_habitat_extent',
                              'CP'  = 'cp_habitat_extent_rank',
                              'HAB' = 'hab_presence')
-pressures_components  = list('NP'  = c('layer'='np_harvest_product_weight'),
-                             'CS'  = c('layer'='cs_habitat_extent'        ),
-                             'CP'  = c('layer'='cp_habitat_extent_rank'   ),
-                             'LIV' = c('layer'='le_sector_weight'         ),
-                             'ECO' = c('layer'='le_sector_weight'         ),
-                             'HAB' = c('layer'='hab_presence'             ))
-pressures_categories = list(environmental=c('po','hd','fp','sp','cc'), social='ss')
+pressures_components  = list('NP'  = 'np_harvest_product_weight',
+                             'CS'  = 'cs_habitat_extent'        ,
+                             'CP'  = 'cp_habitat_extent_rank'   ,
+                             'LIV' = 'le_sector_weight'         ,
+                             'ECO' = 'le_sector_weight'         ,
+                             'HAB' = 'hab_presence'             )
+
+pressures_categories = list(ecological=c('po','hd','fp','sp','cc'),
+                            social='ss')
 
 # constants
 pressures_gamma  = 0.5 # The relative importance of social vs. ecological pressures   (pressure   = gamma * ecological + (1-gamma) * social)
