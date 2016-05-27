@@ -16,9 +16,6 @@ pressures_components  = list('NP'  = 'np_harvest_product_weight',
                              'ECO' = 'le_sector_weight'         ,
                              'HAB' = 'hab_presence'             )
 
-pressures_categories = list(ecological=c('po','hd','fp','sp','cc'),
-                            social='ss')
-
 # constants
 pressures_gamma  = 0.5 # The relative importance of social vs. ecological pressures   (pressure   = gamma * ecological + (1-gamma) * social)
 resilience_gamma = 0.5 # The relative importance of social vs. ecological resiliences (resilience = gamma * ecological + (1-gamma) * social)
