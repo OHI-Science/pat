@@ -1,0 +1,28 @@
+---
+title: "le_gdp"
+output: html_document
+date: '2022-07-05'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+```
+
+```{r}
+#Cargar la base de datos de los salarios 
+gpd <- read_excel("prep/ECO/gpd_.xlsx")
+gpd$rgn_id<- as.factor(gpd$rgn_id)
+
+#Ordenar la tabla en formato largo
+gpd2<-melt(gpd, id.vars = c("rgn_id"))
+
+#guardar la base de datos 
+write.csv(gpd2, "comunas/layers/le_gdp.csv", row.names = FALSE)
+```

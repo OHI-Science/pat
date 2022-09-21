@@ -1,0 +1,32 @@
+---
+title: "le_jobs_sector_year"
+output: html_document
+date: '2022-07-05'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+```
+
+```{r}
+#Cargar la base de datos de los salarios 
+trab<- read_excel("prep/ECO/trabajadores.xlsx")
+trab<- select(trab, -c("Comuna"))
+trab$rgn_id<- as.factor(trab$rgn_id)
+
+#Ordenar la tabla en formato largo
+trab2<-melt(trab, id.vars = c("rgn_id", "Actividad"))
+
+#Renombrar
+trab2<- rename(trab2, Sector = "Actividad", Year = "Variable")
+
+#guardar la base de datos 
+write.csv(trab2, "comunas/layers/le_jobs_sector_year.csv", row.names = FALSE)
+```

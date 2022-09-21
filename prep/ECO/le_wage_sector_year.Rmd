@@ -1,0 +1,35 @@
+---
+title: "le_wage_sector_year_pat2022"
+output: html_document
+date: '2022-07-05'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+```
+
+```{r}
+#Cargar la base de datos de los salarios 
+salarios <- read_excel("prep/ECO/salarios.xlsx")
+sal<- select(salarios, -c("Comuna"))
+sal$rgn_id<- as.factor(sal$rgn_id)
+
+#Ordenar la tabla en formato largo
+sal2<-melt(sal, id.vars = c("rgn_id", "codigo"))
+
+#Renombrar
+sal2<- rename(sal2, Sector = "codigo", Year = "Variable")
+
+#guardar la base de datos 
+write.csv(sal2, "comunas/layers/le_wage_sector_year.csv", row.names = FALSE)
+```
+
+
+

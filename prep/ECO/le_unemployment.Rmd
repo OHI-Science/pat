@@ -1,0 +1,30 @@
+---
+title: "le_unemployment"
+output: html_document
+date: '2022-07-05'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+```
+
+```{r}
+#Cargar la base de datos de los salarios 
+des <- read_excel("prep/ECO/desocupacion.xlsx")
+des<- select(des, -c("Comuna", "...3"))
+des<-rename(des, rgn_id = "des")
+sal$rgn_id<- as.factor(sal$rgn_id)
+
+#Ordenar la tabla en formato largo
+des2<-melt(Fuerza_de_trabajo, id.vars = c("rgn_id"))
+
+#guardar la base de datos 
+write.csv(des2, "comunas/layers/le_unemployment.csv", row.names = FALSE)
+```
