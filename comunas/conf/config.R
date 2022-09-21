@@ -1,41 +1,42 @@
 # region data layers----
 # a list of possible id fields used in datalayers (most will use rgn_id, but not always)
-layers_id_fields        = c('rgn_id','cntry_key', 'fao_id', 'fao_saup_id', 'country_id','saup_id','fao_ohi_id') 
+layers_id_fields    = c('rgn_id','cntry_key', 'fao_id', 'fao_saup_id', 'country_id','saup_id','fao_ohi_id') 
 
 # the official list of regions (and corresponding names)
-layer_region_labels     = 'rgn_global'   
+# (note: this is a .csv file in the layers folder)
+layer_region_labels = 'rgn_global'   
 
 # the official ocean areas of each region (used to weight each subregions contribution to the region score)
-layer_region_areas      = 'rgn_area'
+# (note: this is a .csv file in the layers folder)
+layer_region_areas  = 'rgn_area'
 
 # pressures & resilience matrices ----
 
-# For goals with elements (e.g., for coastal protection: mangrove, saltmarsh, seagrass), these data layers describe how to
-# weight the contribution of each goal element to calculate the final goal pressure and resilience dimensions.
+# For goals with elements (e.g., for coastal protection: mangrove, saltmarsh, seagrass), these data layers describe how to weight the contribution of each goal element to calculate the final goal pressure and resilience dimensions.
+# (note: these are .csv files in the layers folder)
 resilience_element = list('NP'  = 'np_harvest_product_weight',
-                             'CS'  = 'element_wts_cs_km2_x_storage' ,
-                             'CP'  = 'element_wts_cp_km2_x_protection',
-                             'HAB' = 'element_wts_hab_pres_abs'             )
+                          'CS'  = 'element_wts_cs_km2_x_storage',      # populated in CS() in functions.R
+                          'CP'  = 'element_wts_cp_km2_x_protection',   # populated in CP() in functions.R
+                          'HAB' = 'element_wts_hab_pres_abs')          # populated in HAB() in functions.R
 
 pressures_element  = list('NP'  = 'np_harvest_product_weight',
-                             'CS'  = 'element_wts_cs_km2_x_storage'  ,
-                             'CP'  = 'element_wts_cp_km2_x_protection' ,
-                             'LIV' = 'le_sector_weight' ,
-                             'ECO' = 'le_sector_weight',
-                             'HAB' = 'element_wts_hab_pres_abs'             )
+                          'CS'  = 'element_wts_cs_km2_x_storage',      # populated in CS() in functions.R
+                          'CP'  = 'element_wts_cp_km2_x_protection',   # populated in CS() in functions.R
+                          'LIV' = 'le_sector_weight',
+                          'ECO' = 'le_sector_weight',
+                          'HAB' = 'element_wts_hab_pres_abs')          # populated in CS() in functions.R
 
 
 # constants
+# These are used in the Calculate functions in ohicore to calculate pressures/resilience/trend/likely future state
 pressures_gamma = 0.5  # The relative importance of social vs. ecological pressures (pressure = gamma * ecological + (1-gamma) * social)
 resilience_gamma = 0.5 # The relative importance of social vs. ecological resiliences (resilience = gamma * ecological + (1-gamma) * social)
 goal_discount = 1.0    # Used to calculate likely future state
 goal_beta = 0.67       # The relative importance of trend vs. pressure/resilience on likely future state; if goal_beta = 0.67, trend is twice as important as pressure/resilience.
 default_trend = 0
 
-
-#### NOTE: can we delete the following information???
-# map configuration
-map_lat=0; map_lon=0; map_zoom=3
+# spatial configuration (used by shiny app and future ohicore mapping functions that use leaflet)
+geojson = '../eez2015/spatial/rgn_offshore_gcs_mapshaper-simplify_x2_eez-only.geojson'
 
 # extra descriptions not covered by goals.description or layers.description, used in ohigui
 index_description = 'The overall Index represents the weighted average of all goal scores.'
