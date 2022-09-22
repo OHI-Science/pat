@@ -2,6 +2,15 @@ pct_ref <- 90
 
 scen_year <- layers$data$scenario_year
 
+#Ordenar la tabla en formato largo
+tr_sustainability_pat2021<-melt(tr_sustainability_pat2021, id.vars = c("rgn_id"))
+
+
+tr_sustainability_pat2021<- rename(tr_sustainability_pat2021,s_score = "value")
+tr_sustainability_pat2021<- rename(tr_sustainability_pat2021,year = "variable")
+tr_sustainability_pat2021$year<- as.numeric(tr_sustainability_pat2021$year)
+
+write.csv(tr_sustainability_pat2021, "comunas/layers/tr_sustainability_pat2021.csv")
 
 ## read in layers
 tourism <-
@@ -51,7 +60,7 @@ ref_point <- tr_model %>%
 #  goal = "TR",
 #  method = paste0('spatial: ', as.character(pct_ref), "th quantile"),
 #  ref_pt = as.character(ref_point))
-## Reference Point End  
+## Reference Point End
 
 # get status
 tr_status <- tr_model %>%
