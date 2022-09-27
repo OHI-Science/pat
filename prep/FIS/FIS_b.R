@@ -4,6 +4,8 @@ install.packages("Rtools")
 
 library(tidyverse)
 library(ohicore)
+library(stringr)
+library(tidyr)
 ### ESTADO DE BASE  2017- 2021 ###
 
 # Xfis= estado de las pesquerias pescadas en la naturaleza
@@ -17,24 +19,24 @@ library(ohicore)
 setwd("D:/Dropbox/IDEAL/R projects/Chile_PE")
 
 ######### LOS DATASETS FUERON ENTREGADOS POR SERNAPESCA. SON DE DOS ORIGENES DIFERENTES, UNO XSL DESDE 2010 A 2021 Y OTRO DE ACCESS DESDE 1997 A 2009, LOS HOMOGENIZE PARA QUE TUVIESEN MISMO NUMERO DE COLUMNAS. LA UNIDAD DE OBSERVACION ES LA SALIDA A PESCAR POR BARCO
-dataFull_2010_2021 <- read.csv2("LandingsFull_2010_2021.csv",header=T,dec=",",sep=";")
-dataFull_1997_2009 <- read.table("DESEMBARQUES 1997-2009.txt", header=F,dec=",",sep=";")
+dataFull_2010_2021 <- read.csv2("C:/Data/LandingsFull_2010_2021.csv",header=T,dec=",",sep=";", check.names = F)
+dataFull_1997_2009 <- read.table("C:/Data/DESEMBARQUES 1997-2009.txt", header=F,dec=",",sep=";")
 
-colnames(dataFull_1997_2009) <- colnames(dataFull_2010_2021)# cambia el nombre de las columnas 
+colnames(dataFull_1997_2009) <- colnames(dataFull_2010_2021)# cambia el nombre de las columnas
 
 dFull1997_2021 <- rbind(dataFull_2010_2021, dataFull_1997_2009)#junta ambos data sets
 
-dFull1997_2021 <- dFull1997_2021 %>% 
+dFull1997_2021 <- dFull1997_2021 %>%
   mutate(Land=str_replace_all(Landings_Ton, ",","."))
 
 
 ###SEPARA UNA DE LAS COUMNAS DE FECHA PARA DIVIDIRLA EN DIA, MES Y AnO PARA PODER AGRUPAR DATOS
-dFull1997_2021b <- dFull1997_2021 %>% 
+dFull1997_2021b <- dFull1997_2021 %>%
   separate(FechaLlegada, into = c("Date", "Time"), sep = " ", remove = FALSE)
 
 
-dFull1997_2021c <- dFull1997_2021b %>% 
-  separate("Date", into=c("Day","Month","Year"), sep="/") %>% 
+dFull1997_2021c <- dFull1997_2021b %>%
+  separate("Date", into=c("Day","Month","Year"), sep="-") %>%
   mutate(Month=str_replace(Month, "^0",""))
 
 str(dFull1997_2021c)
@@ -54,9 +56,8 @@ dataFIS <- merge(filt_dFull2017_2021,comunas_id, by.x = "Comuna", by.y = "rgn_na
 
 
 
-
-c <- dataFIS  %>% 
-  group_by(rgn_id,Year,Spp) %>% 
+c <- dataFIS  %>%
+  group_by(rgn_id,Year,Spp) %>%
   summarise(Meanlandings=mean(Landings_Ton), SumLandings=sum(Landings_Ton))
 
 b <- read.csv2("fis_b_bmsy_pat2022.csv",header=T,dec=",",sep=";")
@@ -81,7 +82,7 @@ data_fis <- c %>%
 ###
 
 ## this takes the mean score within each region and year
-## 
+##
 data_fis_gf <- data_fis %>%
   dplyr::group_by(rgn_id, Year) %>%
   dplyr::mutate(mean_score = mean(bbmsy, na.rm = TRUE)) %>%
@@ -118,7 +119,7 @@ status_data <- status_data %>%
   dplyr::group_by(Year, rgn_id) %>%
   dplyr::mutate(SumCatch = sum(SumLandings)) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(wprop = SumLandings / SumCatch)  
+  dplyr::mutate(wprop = SumLandings / SumCatch)
 
 status_data_final <- status_data %>%
   dplyr::group_by(rgn_id, Year) %>%
@@ -166,7 +167,7 @@ mean_status_ALL <- status_final_names %>%
   group_by(rgn_name, rgn_id) %>%
   summarise(total_mean_score=mean(status))
 
-#para compartir los datos con meta NP_Vanessa 
+#para compartir los datos con meta NP_Vanessa
 write.csv(mean_status_ALL, "mean_status_FIS.csv")
 
 #mean_status_ALL <- rename(mean_status_ALL, id_ohi=rgn_id)
@@ -226,8 +227,8 @@ filt_dFull2017_2021_spp <- filter(dFull1997_2021c, Year>=2017 & Spp  %in% c("MER
                                   "CENTOLLA", "ERIZO", "ALMEJA", "ANCHOVETA","REINETA", "SARDINA AUSTRAL"))
 
 
-cont_com_17_21_spp <- filt_dFull2017_2021_spp  %>% 
-  group_by(Comuna,Spp) %>% 
+cont_com_17_21_spp <- filt_dFull2017_2021_spp  %>%
+  group_by(Comuna,Spp) %>%
   summarise(sumLandings=sum(Landings_Ton))
 
 ## SUMA DE SPP CON VALOR DE B/bmsy
@@ -239,10 +240,10 @@ sum(filt_dFull2017_2021$Landings_Ton)
 # % del volumen que representan las spp con valor bbmsy en el total del periodo 2017-2021
 (300147*100)/557236
 
-            
+
 full_foin_cont_com <- full_join(cont_com_17_21_spp,cont_com_17_21_tot, by="Comuna")
 
-full_foin_cont_com <- full_foin_cont_com  %>% 
+full_foin_cont_com <- full_foin_cont_com  %>%
   mutate(percentage=(sumLandings.x*100)/sumLandings.y)
 
 
