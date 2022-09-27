@@ -7,16 +7,18 @@
 FIS <- function(layers) {
     scen_year <- layers$data$scenario_year
 
+
   #catch data
   c <-
-    AlignDataYears(layer_nm = "fis_meancatch", layers_obj = layers) %>%
-    dplyr::select(rgn_id, Year = scenario_year, Spp, Meanlandings)
+    AlignDataYears(layer_nm = "fis_landings", layers_obj = layers) %>%
+    dplyr::select(rgn_id, Year = scenario_year, Spp, SumLandings)
+
 
   #  b_bmsy data
 
     b <-
       AlignDataYears(layer_nm = "fis_b_bmsy", layers_obj = layers) %>%
-      dplyr::select(region_id = rgn_id, Year = scenario_year,  Spp, bbmsy)
+      dplyr::select(rgn_id, Year = scenario_year,  Spp, bbmsy)
 
   # The following stocks are fished in multiple regions and often have high b/bmsy values
   # Due to the underfishing penalty, this actually penalizes the regions that have the highest
@@ -68,7 +70,6 @@ FIS <- function(layers) {
   #adaptacion PAT
   status_data <- data_fis_gf3 %>%
     dplyr::select(rgn_id, Spp, Year, SumLandings, mean_score)
-
   ###
   # STEP 4. Calculate status for each region
   ###
@@ -83,10 +84,12 @@ FIS <- function(layers) {
     dplyr::ungroup() %>%
     dplyr::mutate(wprop = SumLandings / SumCatch)
 
+  status_data$mean_score<- as.numeric(status_data$mean_score)
+
   status_data_final <- status_data %>%
     dplyr::group_by(rgn_id, Year) %>%
-    dplyr::summarize(status = prod(mean_score ^ wprop)) %>%
-    rename(year = "Year") %>%
+    dplyr::summarize(status = prod(na.omit(mean_score ^ wprop))) %>%
+    dplyr::rename(year = "Year") %>%
     dplyr::ungroup()
 
 
