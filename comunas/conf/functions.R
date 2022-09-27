@@ -306,34 +306,46 @@ AO <- function(layers) {
   Sustainability <- 1.0
 
   scen_year <- layers$data$scenario_year
+  scen_year<- 2021
 
-  r <- AlignDataYears(layer_nm = "ao_access", layers_obj = layers) %>%
-    dplyr::rename(region_id = rgn_id, access = value) %>%
-    na.omit()
+  gini<-
 
-  ry <-
-    AlignDataYears(layer_nm = "ao_need", layers_obj = layers) %>%
-    dplyr::rename(region_id = rgn_id, need = value) %>%
-    dplyr::left_join(r, by = c("region_id", "scenario_year"))
+  Sust_artes<-
 
-  # model
-  ry <- ry %>%
-    dplyr::mutate(Du = (1 - need) * (1 - access)) %>%
-    dplyr::mutate(status = (1 - Du) * Sustainability)
+  RPA<-
 
-  # status
-  r.status <- ry %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id, status) %>%
-    dplyr::mutate(status = status * 100) %>%
-    dplyr::select(region_id, score = status) %>%
-    dplyr::mutate(dimension = 'status')
+  #Calculo de status
+
+  OA_data_final <- merge(RPA, gini, by.x=c("rgn_id", "year"), by.y=c("rgn_id","year"), all=T)
+
+  OA_data_final_sust <- merge(OA_data_final, Sust_artes, by.x=c("rgn_id","year"), by.y=c("rgn_id","year"), all=T)
+
+  OA_data_final2 <- OA_data_final_sust  %>%
+    mutate(rollmeanBirths=(zoo::rollapply(normperct,5, mean, na.rm=T, partial=T)),
+           rollmeanGini=(zoo::rollapply(Gini_inv,5, mean, na.rm=T, partial=T)),
+           Xao=((rollmeanGini+rollmeanBirths+Sustcoef_norm)/3))
+
+
+  #Para calcular la tendencia
+
+  AO_2017_2021 <- OA_data_final2 %>%
+    filter(year %in% (2017:2021)) %>%
+    dplyr::rename(region_id = "rgn_id", status = "Xao") %>%
+    dplyr::select(region_id,year,status)
+
+  r.status <-  AO_2017_2021 %>%
+    dplyr::filter(year == scen_year) %>%
+    dplyr::mutate(score     = round(status * 100, 1),
+                  dimension = 'status') %>%
+    dplyr::select(region_id, score, dimension)
 
   # trend
 
+
   trend_years <- (scen_year - 4):(scen_year)
 
-  r.trend <- CalculateTrend(status_data = ry, trend_years = trend_years)
+  r.trend <-
+    CalculateTrend(status_data = AO_2017_2021, trend_years = trend_years)
 
 
   # return scores
