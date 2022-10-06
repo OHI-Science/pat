@@ -26,61 +26,39 @@ tr_data  <-
 tr_model <- tr_data %>%
   dplyr::mutate(E   = ep,
                 S   = s_score,
-                Xtr = E * S)
+                Xtr = E * S)  %>%
+  select(rgn_id, year= "scenario_year", Xtr)
 
+tr_modelnew<-merge(tr_model, tr_factor)
 
-# assign NA for uninhabitated islands (i.e., islands with <100 people)
-if (conf$config$layer_region_labels == 'rgn_id') {
-  unpopulated = layers$data$uninhabited %>%
-    dplyr::filter(est_population < 100 | is.na(est_population)) %>%
-    dplyr::select(rgn_id)
-  tr_model$Xtr = ifelse(tr_model$rgn_id %in% unpopulated$rgn_id,
-                        NA,
-                        tr_model$Xtr)
-}
+## Añadir el factor de corrección de turismo
+tr_modelnew<- tr_modelnew  %>%
+  dplyr::mutate(xtr = Xtr * factor)
 
+## Punto de ref
+p_ref<- tr_modelnew  %>%
+  group_by(year) %>%
+  summarise(rgn_id, p_max = max(xtr), p_min = min(xtr))
 
+## Scores
+tr_scores<- merge(p_ref, tr_modelnew)
+tr_scores<- tr_scores %>%
+  mutate(status = c((xtr-p_min)/(p_max-p_min)) ) %>%
+  select(rgn_id, year, status)
 
-### Calculate status based on quantile reference (see function call for pct_ref)
-tr_model <- tr_model %>%
-  dplyr::filter(scenario_year >=2017) %>%
-  dplyr::mutate(Xtr_q = quantile(Xtr, probs = pct_ref / 100, na.rm = TRUE)) %>%
-  dplyr::mutate(status  = ifelse(Xtr / Xtr_q > 1, 1, Xtr / Xtr_q)) %>% # rescale to qth percentile, cap at 1
-  dplyr::ungroup()
-
-## Reference Point Accounting
-ref_point <- tr_model %>%
-  dplyr::filter(scenario_year == scen_year) %>%
-  dplyr::select(Xtr_q) %>%
-  unique() %>%
-  data.frame() %>%
-  .$Xtr_q
-
-#WriteRefPoint(
-#  goal = "TR",
-#  method = paste0('spatial: ', as.character(pct_ref), "th quantile"),
-#  ref_pt = as.character(ref_point))
-## Reference Point End
 
 # get status
-tr_status <- tr_model %>%
-  dplyr::filter(scenario_year == scen_year) %>%
-  dplyr::select(region_id = rgn_id, score = status) %>%
-  dplyr::mutate(score = score * 100) %>%
+tr_status <- tr_scores %>%
+  dplyr::filter(year == scen_year) %>%
+  dplyr::mutate(score = status * 100) %>%
+  dplyr::select(region_id = "rgn_id", score) %>%
   dplyr::mutate(dimension = 'status')
 
 
 # calculate trend
-
-trend_data <- tr_model %>%
-  dplyr::filter(!is.na(status)) %>%
-  dplyr::select(rgn_id, scenario_year, status)
-
 trend_years <- (scen_year - 4):(scen_year)
-
-
 tr_trend <-
-  CalculateTrend(status_data = trend_data, trend_years = trend_years)
+  CalculateTrend(status_data =tr_scores, trend_years = trend_years)
 
 
 # bind status and trend by rows
@@ -90,8 +68,7 @@ tr_score <- dplyr::bind_rows(tr_status, tr_trend) %>%
 
 # return final scores
 scores <- tr_score %>%
-  dplyr::select(region_id, goal, dimension, score)
+  dplyr::select(rgn_id, goal, dimension, score)
 
-scores<-scores[!duplicated(scores), ]
 
 return(scores)
