@@ -961,26 +961,26 @@ LSP <- function(layers) {
     dplyr::select(region_id = rgn_id, area_km2, layer) %>%
     tidyr::spread(layer, area_km2) %>%
     dplyr::select(region_id,
-           area_inland1km = rgn_area_inland1km,
-           area_offshore3nm = rgn_area_offshore3nm)
+                  area_inland1km = rgn_area_inland1km,
+                  area_offshore3nm = rgn_area_offshore3nm)
 
 
   offshore <-
-     AlignDataYears(layer_nm = "lsp_prot_area_offshore3nm", layers_obj = layers) %>%
-     dplyr::select(region_id = rgn_id,
-            year = scenario_year,
-            cmpa = area_km2)
+    AlignDataYears(layer_nm = "lsp_prot_area_offshore3nm", layers_obj = layers) %>%
+    dplyr::select(region_id = rgn_id,
+                  year = scenario_year,
+                  cmpa = area_km2)
   inland <-
     AlignDataYears(layer_nm = "lsp_prot_area_inland1km", layers_obj = layers) %>%
-     dplyr::select(region_id = rgn_id,
-          year = scenario_year,
-           cp = area_km2)
+    dplyr::select(region_id = rgn_id,
+                  year = scenario_year,
+                  cp = area_km2)
 
 
-   ry_offshore <-  layers$data$lsp_prot_area_offshore3nm %>%
-     select(region_id = rgn_id, year, cmpa = area_km2)
-   ry_inland <- layers$data$lsp_prot_area_inland1km %>%
-     select(region_id = rgn_id, year, cp = area_km2)
+  ry_offshore <-  layers$data$lsp_prot_area_offshore3nm %>%
+    select(region_id = rgn_id, year, cmpa = area_km2)
+  ry_inland <- layers$data$lsp_prot_area_inland1km %>%
+    select(region_id = rgn_id, year, cp = area_km2)
 
   lsp_data <- full_join(ry_offshore, ry_inland, by = c("region_id", "year"))
 
@@ -991,7 +991,7 @@ LSP <- function(layers) {
     dplyr::left_join(lsp_data, by = c('region_id', 'year')) %>%
     dplyr::arrange(region_id, year) %>%
     dplyr::mutate(cp = ifelse(is.na(cp), 0, cp),
-           cmpa = ifelse(is.na(cmpa), 0, cmpa)) %>%
+                  cmpa = ifelse(is.na(cmpa), 0, cmpa)) %>%
     dplyr::mutate(pa     = cp + cmpa)
 
 
