@@ -34,6 +34,8 @@ library(stringr)
 library(zoo)
 library(here)
 library(ohicore)
+library(plyr)
+library(maditr)
 
 ## set the working directory to a filepath we all have
 setwd(here::here('comunas'))

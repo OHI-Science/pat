@@ -903,95 +903,46 @@ LE <- function(scores, layers) {
 
 ICO <- function(layers) {
   scen_year <- layers$data$scenario_year
+  lyr1 = c('ico_spp_extinction_status' = 'risk_category')
+  lyr2 = c( 'ico_spp_popn_trend'        = 'popn_trend')
 
-  rk <-
-    AlignDataYears(layer_nm = "ico_spp_extinction_status_pat2021", layers_obj = layers) %>%
-    dplyr::select(
-      region_id = rgn_id,
-      sciname,
-      iucn_sid,
-      iucn_cat = category,
-      scenario_year,
-      eval_yr,
-      ico_spp_iucn_status_year
-    ) %>%
-    dplyr::mutate(iucn_cat = as.character(iucn_cat)) %>%
-    dplyr::group_by(region_id, iucn_sid) %>%
-    dplyr::mutate(sample_n = length(na.omit(unique(eval_yr[eval_yr > scen_year-19])))) %>%
-    dplyr::ungroup() %>%
-    dplyr::group_by(sciname, region_id) %>%
-    dplyr::mutate(sample_n = min(sample_n)) %>%
-    dplyr::ungroup()
+  # cast data ----
+  l_data1 = SelectLayersData(layers, layers=names(lyr1))
+  l_data2 = SelectLayersData(layers, layers=names(lyr2))
+  l_data1 <- select(l_data1, c("id_num", "category", "val_chr"))
+  l_data1<- dplyr:: rename(l_data1, c("risk_category" = "val_chr",'region_id'='id_num', 'sciname' ='category'))
+  l_data2<- select(l_data2, c("id_num", "category", "val_chr"))
+  l_data2<- dplyr:: rename(l_data2, c("popn_trend" = "val_chr",'region_id'='id_num', 'sciname' ='category'))
+  rk<- merge(l_data1, l_data2)
+
 
   # lookup for weights status
-  #  LC <- "LOWER RISK/LEAST CONCERN (LR/LC)"
-  #  NT <- "LOWER RISK/NEAR THREATENED (LR/NT)"
-  #  T  <- "THREATENED (T)" treat as "EN"
-  #  VU <- "VULNERABLE (V)"
-  #  EN <- "ENDANGERED (E)"
-  #  LR/CD <- "LOWER RISK/CONSERVATION DEPENDENT (LR/CD)" treat as between VU and NT
-  #  CR <- "VERY RARE AND BELIEVED TO BE DECREASING IN NUMBERS"
-  #  DD <- "INSUFFICIENTLY KNOWN (K)"
-  #  DD <- "INDETERMINATE (I)"
-  #  DD <- "STATUS INADEQUATELY KNOWN-SURVEY REQUIRED OR DATA SOUGHT"
+  w.risk_category = c('LC' = 0,
+                      'NT' = 0.2,
+                      'VU' = 0.4,
+                      'EN' = 0.6,
+                      'CR' = 0.8,
+                      'EX' = 1)
 
-  w.risk_category <-
-    data.frame(
-      iucn_cat = c('LC', 'NT', 'CD', 'VU', 'EN', 'CR', 'EX', 'DD'),
-      risk_score = c(0,  0.2,  0.3,  0.4,  0.6,  0.8,  1, NA)
-    ) %>%
-    dplyr::mutate(status_score = 1 - risk_score) %>%
-    dplyr::mutate(iucn_cat = as.character(iucn_cat))
+  # lookup for population trend
+  w.popn_trend = c('Decreciendo' = -0.5,
+                   'Estable'     =  0,
+                   'Creciendo' =  0.5)
 
-  ####### status
-  # STEP 1: take mean of subpopulation scores
-  r.status_spp <- rk %>%
-    dplyr::left_join(w.risk_category, by = 'iucn_cat') %>%
-    dplyr::group_by(region_id, sciname, scenario_year, ico_spp_iucn_status_year) %>%
-    dplyr::summarize(spp_mean = mean(status_score, na.rm = TRUE)) %>%
-    dplyr::ungroup()
+  # status
+  r.status = rename(ddply(rk, .(region_id), function(x){
+    mean(1 - w.risk_category[x$risk_category], na.rm=T) * 100 }),
+    c('V1'='score'))
 
-  # STEP 2: take mean of populations within regions
-  r.status <- r.status_spp %>%
-    dplyr::group_by(region_id, scenario_year, ico_spp_iucn_status_year) %>%
-    dplyr::summarize(status = mean(spp_mean, na.rm = TRUE)) %>%
-    dplyr::ungroup()
-
-  ####### status
-  status <- r.status %>%
-    filter(scenario_year == scen_year) %>%
-    mutate(score = status * 100) %>%
-    mutate(dimension = "status") %>%
-    select(region_id, score, dimension)
-
-  ####### trend
-  trend_years <- (scen_year - 19):(scen_year)
-
-  # trend calculated with status filtered for species with 2+ iucn evaluations in trend_years
-  r.status_filtered <- rk %>%
-    dplyr::filter(sample_n >= 2) %>%
-    dplyr::left_join(w.risk_category, by = 'iucn_cat') %>%
-    dplyr::group_by(region_id, sciname, scenario_year, ico_spp_iucn_status_year) %>%
-    dplyr::summarize(spp_mean = mean(status_score, na.rm = TRUE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::group_by(region_id, scenario_year, ico_spp_iucn_status_year) %>%
-    dplyr::summarize(status = mean(spp_mean, na.rm = TRUE)) %>%
-    dplyr::ungroup()
-
-  trend <-
-    CalculateTrend(status_data = r.status_filtered, trend_years = trend_years)
-
+  # trend
+  r.trend = rename(ddply(rk, .(region_id), function(x){
+    mean(w.popn_trend[x$popn_trend], na.rm=T) }),
+    c('V1'='score'))
 
   # return scores
-  scores <-  rbind(status, trend) %>%
-    dplyr::mutate('goal' = 'ICO') %>%
-    dplyr::select(goal, dimension, region_id, score) %>%
-    data.frame()
-
-  scores <- scores %>%
-    dplyr::mutate(score2 = ifelse(is.na(score), score_gf, score)) %>%
-    dplyr::select(goal, dimension, region_id, score = score2) %>%
-    data.frame()
+  s.status = cbind(r.status, data.frame('dimension'='status'))
+  s.trend  = cbind(r.trend , data.frame('dimension'='trend' ))
+  scores = cbind(rbind(s.status, s.trend), data.frame('goal'='ICO'))
 
   return(scores)
 

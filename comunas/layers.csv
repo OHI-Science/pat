@@ -20,7 +20,7 @@
 "FIS","fis_b_bmsy","fis_b_bmsy_pat2021.csv","bbmsy","score","","","fis_b_bmsy","~/github/pat/comunas/layers/fis_b_bmsy_pat2021.csv","rgn_id",,"spp","year","bbmsy",,TRUE,2017,2021,0.360872639,1,TRUE,,,,24,FALSE
 "FIS","fis_landings","fis_landings_pat2021.csv","SumLandings","tonnes","","","","~/github/pat/comunas/layers/fis_landings_pat2021.csv","rgn_id",,"spp","year","sumlandings",,TRUE,2017,2021,0.001,14031.718,FALSE,,,,24,FALSE
 "CW","cw_coastalpopn_trend","cw_coastalpopn_trend_pat2021.csv","trend","trend","","","","~/github/pat/comunas/layers/cw_coastalpopn_trend_pat2021.csv","rgn_id",,,"year","trend",,TRUE,2021,2021,-0.0434988355669328,1,FALSE,,,,24,FALSE
-"CW","cw_nutrient_trend","cw_nutrient_trend_pat2021.csv","trend","trend","","","","~/github/pat/comunas/layers/cw_nutrient_trend_pat2021.csv","rgn_id",,,"year","trend",,TRUE,2021,2021,0,0.41800750480018,TRUE,,,,24,FALSE
+"CW","cw_nutrient_trend","cw_nutrient_trend_pat2021.csv","trend","trend","","","","~/github/pat/comunas/layers/cw_nutrient_trend_pat2021.csv","rgn_id",,,"year","trend",,TRUE,2021,2021,-1,1,FALSE,,,,24,FALSE
 "CW","cw_pathogen_trend","cw_pathogen_trend_pat2021.csv","trend","trend","","","","~/github/pat/comunas/layers/cw_pathogen_trend_pat2021.csv","rgn_id",,,"year","trend",,TRUE,2021,2021,-1.19408770867082e-16,3.82108066774664e-15,FALSE,,,,24,FALSE
 "CW","cw_chemical_trend","cw_chemical_trend_pat2021.csv","trend","trend","","","","~/github/pat/comunas/layers/cw_chemical_trend_pat2021.csv","rgn_id",,,"year","trend",,TRUE,2021,2021,0,0,TRUE,,,,24,FALSE
 "CW","po_nutrients_3nm","po_nutrients_3nm_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/po_nutrients_3nm_pat2021.csv","rgn_id",,,"year","pressure_score",,TRUE,2021,2021,0,1,TRUE,,,,24,FALSE
