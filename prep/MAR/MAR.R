@@ -29,19 +29,19 @@ c2 <- c1 %>%
 
 ##Punto de referencia
 pto_ref<- c2 %>% group_by(rgn_id, species) %>%
-  summarise(pto_max = max(sm_tonnes))%>%
-  group_by(rgn_id) %>%
-  summarise(pto_ref = sum(pto_max)) %>%
-  mutate(Punto_ref = pto_ref*0.01) %>%
-  select(rgn_id, Punto_ref)
+  dplyr::summarise(pto_max = max(sm_tonnes))%>%
+  dplyr::group_by(rgn_id) %>%
+  dplyr::summarise(pto_ref = sum(pto_max)) %>%
+  dplyr::mutate(Punto_ref = pto_ref*0.01) %>%
+  dplyr::select(rgn_id, Punto_ref)
 
 ##Para calcular el estado
 c3<- c2 %>%
   dplyr::filter(year %in% c(2017:2021)) %>%
-  mutate(mult = sm_tonnes* sust_coeff) %>%
-  group_by(rgn_id, year) %>%
-  mutate(YC = sum(mult)) %>%
-  select(rgn_id, year, YC)
+  dplyr::mutate(mult = sm_tonnes* sust_coeff) %>%
+  dplyr::group_by(rgn_id, year) %>%
+  dplyr::mutate(YC = sum(mult)) %>%
+  dplyr::select(rgn_id, year, YC)
 
 c3<-c3[!duplicated(c3), ]
 
@@ -49,8 +49,8 @@ c3<-c3[!duplicated(c3), ]
 c4<- merge(c3, pto_ref)
 
 status<-c4 %>%
-  mutate(status = YC/Punto_ref) %>%
-  select(rgn_id, year, status)
+  dplyr::mutate(status = YC/Punto_ref) %>%
+  dplyr::select(rgn_id, year, status)
 
 # status
 status_a <- status %>%

@@ -6,7 +6,15 @@
 
 FIS <- function(layers) {
     scen_year <- layers$data$scenario_year
+    ### ESTADO DE BASE  2017- 2021 ###
 
+    # Xfis= estado de las pesquerias pescadas en la naturaleza
+    # SS= puntuaciones de estado de las pesquerias
+    # B/Bmsy=indicador para informar SS
+    # C= contribucion de la poblaci?n a la captura total
+
+
+    ### from script FUNCTIONS global de OHI core
 
   #catch data
   c <-
@@ -101,7 +109,7 @@ FIS <- function(layers) {
     dplyr::filter(year == scen_year) %>%
     dplyr::mutate(score     = round(status * 100, 1),
            dimension = 'status') %>%
-    dplyr::select(rgn_id, score, dimension)
+    dplyr::select(region_id = "rgn_id", score, dimension)
 
 
   # calculate trend
@@ -111,12 +119,13 @@ FIS <- function(layers) {
   trend <-
     CalculateTrend(status_data = status_data_final, trend_years = trend_years)
 
-  trend<- trend  %>%  rename(rgn_id = "region_id")
+
   # assemble dimensions
+  scores <- data.frame()
   scores <- rbind(status, trend) %>%
     dplyr::mutate(goal = 'FIS')
 
-    scores <- data.frame(scores)
+
   return(scores)
 }
 
@@ -125,91 +134,67 @@ MAR <- function(layers) {
 
   scen_year <- layers$data$scenario_year
 
-  harvest_tonnes <-
-    AlignDataYears(layer_nm = "mar_harvest_tonnes", layers_obj = layers)
+  mar_sust <-
+    AlignDataYears(layer_nm = "mar_sustainability", layers_obj = layers) %>%
+    dplyr::select(rgn_id,species, sust_coeff)
+
+  mar_harvest <-
+    AlignDataYears(layer_nm = "mar_harvest_tonnes", layers_obj = layers) %>%
+    dplyr::select(rgn_id,species, year = mar_harvest_tonnes_year, tonnes)
 
 
-  sustainability_score <-
-    AlignDataYears(layer_nm = "mar_sustainability_score", layers_obj = layers)
 
-  popn_inland25mi <-
-    AlignDataYears(layer_nm = "mar_coastalpopn_inland25mi", layers_obj = layers) %>%
-    dplyr::mutate(popsum = popsum + 1)
-
-
-  rky <-  harvest_tonnes %>%
-    dplyr::left_join(sustainability_score,
-              by = c('rgn_id', 'species_code')) %>%
-    dplyr::select(rgn_id, year, species_code, tonnes, sust_coeff)
-
-  # fill in gaps with no data
-  rky <- tidyr::spread(rky, year, tonnes)
-  rky <- tidyr::gather(rky, "year", "tonnes",-(1:3)) %>%
-    dplyr::mutate(year = as.numeric(year))
-
-  # adjustment for seaweeds based on protein content
-#  rky <- rky %>%
-#    dplyr::mutate(tonnes = ifelse(taxa_group == "AL", tonnes*0.2, tonnes)) %>%
-#    dplyr::select(-taxa_group)
+  c1<- merge(mar_harvest, mar_sust)
 
   # 4-year rolling mean of data
-  m <- rky %>%
-    dplyr::group_by(rgn_id, species_code, sust_coeff) %>%
-    dplyr::arrange(rgn_id, species_code, year) %>%
+  c2 <- c1 %>%
+    dplyr::group_by(rgn_id, species) %>%
+    dplyr::arrange(rgn_id, species, year) %>%
     dplyr::mutate(sm_tonnes = zoo::rollapply(tonnes, 4, mean, na.rm = TRUE, partial =
-                                        TRUE, align = "right")) %>%
+                                               TRUE, align = "right")) %>%
     dplyr::ungroup()
 
+  ##Punto de referencia
+  pto_ref<- c2 %>% group_by(rgn_id, species) %>%
+    dplyr::summarise(pto_max = max(sm_tonnes))%>%
+    dplyr::group_by(rgn_id) %>%
+    dplyr::summarise(pto_ref = sum(pto_max)) %>%
+    dplyr::mutate(Punto_ref = pto_ref*0.01) %>%
+    dplyr::select(rgn_id, Punto_ref)
 
-  # smoothed mariculture harvest * sustainability coefficient
-  m <- m %>%
-    dplyr::mutate(sust_tonnes = sust_coeff * sm_tonnes)
+  ##Para calcular el estado
+  c3<- c2 %>%
+    dplyr::filter(year %in% c(2017:2021)) %>%
+    dplyr::mutate(mult = sm_tonnes* sust_coeff) %>%
+    dplyr::group_by(rgn_id, year) %>%
+    dplyr::mutate(YC = sum(mult)) %>%
+    dplyr::select(rgn_id, year, YC)
+
+  c3<-c3[!duplicated(c3), ]
 
 
-  # aggregate all weighted time series per region, and divide by coastal human population
-#  ry = m %>%
-#    dplyr::group_by(rgn_id, year) %>%
-#    dplyr::summarize(sust_tonnes_sum = sum(sust_tonnes, na.rm = TRUE)) %>%#na.rm = TRUE assumes that NA values are 0
-#     dplyr::ungroup()
+  c4<- merge(c3, pto_ref)
 
-# get reference quantile based on argument years
-#  ref_95pct<- data.frame()
-#  for (i in 1:36) {
-#    rye<- ry%>% filter(rgn_id == i, year >= 2017)
-#    ref<- data.frame(rgn_id = i,
-#                     ref= quantile(rye$sust_tonnes_sum, 0.95, na.rm = TRUE))
-#    ref_95pct <- rbind(ref_95pct, ref)
-#  }
-
-ref<- m %>%
-  mutate(ref_point= c(sust_tonnes*0.01))
-
-#ry<- ry %>% left_join(ref_95pct, by = "rgn_id")
-
-  ry_status = ry %>%
-    dplyr::mutate(status = ifelse(ry$sust_tonnes_sum/ ry$ref > 1,
-                           1,
-                           ry$sust_tonnes_sum / ry$ref))
-
+  status<-c4 %>%
+    dplyr::mutate(status = YC/Punto_ref) %>%
+    dplyr::select(rgn_id, year, status)
 
   # status
-   status <- ry %>%
+  status_a <- status %>%
     dplyr::filter(year == scen_year) %>%
     dplyr::mutate(dimension = "status") %>%
-    dplyr::select(region_id = rgn_id, score = status, dimension) %>%
-    dplyr::mutate(score = round(score * 100, 2))
+    dplyr::select(region_id = rgn_id, score = status, dimension)
 
-
-  # calculate trend
 
   trend_years <- (scen_year - 4):(scen_year)
 
-  trend <- CalculateTrend(status_data = dplyr :: select(ry, rgn_id, year, status), trend_years = trend_years)
+  trend <- CalculateTrend(status_data = status, trend_years = trend_years)
 
 
   # return scores
-  scores = rbind(status, trend) %>%
+  score = rbind(status_a, trend) %>%
     dplyr::mutate(goal = 'MAR')
+  scores = rbind(score, scores)
 
   return(scores)
 }
