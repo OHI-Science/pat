@@ -291,13 +291,18 @@ AO <- function(layers) {
   Sustainability <- 1.0
 
   scen_year <- layers$data$scenario_year
-  scen_year<- 2021
 
   gini<-
+    AlignDataYears(layer_nm = "ao_coef_gini", layers_obj = layers) %>%
+    dplyr::select(rgn_id,  year = ao_coef_gini_year, Gini_inv)
 
   Sust_artes<-
+    AlignDataYears(layer_nm = "ao_coef_sust", layers_obj = layers) %>%
+    dplyr::select(rgn_id,  year = ao_coef_sust_year, Sustcoef_norm)
 
   RPA<-
+    AlignDataYears(layer_nm = "ao_rpa", layers_obj = layers) %>%
+    dplyr::select(rgn_id,  year = ao_rpa_year, normperct)
 
   #Calculo de status
 
