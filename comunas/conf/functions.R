@@ -448,102 +448,41 @@ NP <- function(layers) {
 CS <- function(layers) {
   scen_year <- layers$data$scenario_year
 
-  # layers for carbon storage
-  extent_lyrs <-
-    c('hab_mangrove_extent',
-      'hab_seagrass_extent',
-      'hab_saltmarsh_extent')
-  health_lyrs <-
-    c('hab_mangrove_health',
-      'hab_seagrass_health',
-      'hab_saltmarsh_health')
-  trend_lyrs <-
-    c('hab_mangrove_trend',
-      'hab_seagrass_trend',
-      'hab_saltmarsh_trend')
+  cs<-
+    AlignDataYears(layer_nm = "cs_seaweed", layers_obj = layers) %>%
+    dplyr::select( rgn_id,year = scenario_year, value)
 
-  # get data together:
-  extent <- AlignManyDataYears(extent_lyrs) %>%
-    dplyr::filter(!(habitat %in% c(
-      "mangrove_inland1km", "mangrove_offshore"
-    ))) %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, habitat, extent = km2) %>%
-    dplyr::mutate(habitat = as.character(habitat))
+  ##Punto de ref
 
-  health <- AlignManyDataYears(health_lyrs) %>%
-    dplyr::filter(!(habitat %in% c(
-      "mangrove_inland1km", "mangrove_offshore"
-    ))) %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, habitat, health) %>%
-    dplyr::mutate(habitat = as.character(habitat))
+  p_ref<- cs %>%
+    dplyr::group_by(year) %>%
+    dplyr::summarise(max = max(value)) %>%
+    dplyr::mutate(p_ref = c(max+ (max*0.1))) %>%
+    dplyr::select(year, p_ref)
 
-  trend <- AlignManyDataYears(trend_lyrs) %>%
-    dplyr::filter(!(habitat %in% c(
-      "mangrove_inland1km", "mangrove_offshore"
-    ))) %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, habitat, trend) %>%
-    dplyr::mutate(habitat = as.character(habitat))
 
-  ## join layer data
-  d <-  extent %>%
-    dplyr::full_join(health, by = c("region_id", "habitat")) %>%
-    dplyr::full_join(trend, by = c("region_id", "habitat"))
+  ##Calculo del score
+  cs<- merge(cs, p_ref)
 
-  ## set ranks for each habitat
-  habitat.rank <- c('mangrove'         = 139,
-                    'saltmarsh'        = 210,
-                    'seagrass'         = 83)
+  cs_scores<- cs %>%
+    dplyr::mutate(status = value / p_ref) %>%
+    dplyr:: select(region_id = "rgn_id", year, status)
 
-  ## limit to CS habitats and add rank
-  d <- d %>%
-    dplyr::mutate(rank = habitat.rank[habitat],
-           extent = ifelse(extent == 0, NA, extent))
-
-  # status
-  status <- d %>%
-    dplyr::filter(!is.na(rank) & !is.na(health) & !is.na(extent)) %>%
-    dplyr::group_by(region_id) %>%
-    dplyr::summarize(score = pmin(1, sum(rank * health * extent, na.rm = TRUE) / (sum(
-      extent * rank, na.rm = TRUE
-    ))) * 100,
-    dimension = 'status') %>%
-    ungroup()
-
+  ## Estado actual
+  cs_status<- cs_scores %>%
+    dplyr::filter(year == scen_year) %>%
+    dplyr::select(region_id , score ="status") %>%
+    dplyr::mutate(dimension = 'status')
   # trend
 
-  trend <- d %>%
-    filter(!is.na(rank) & !is.na(trend) & !is.na(extent)) %>%
-    dplyr::group_by(region_id) %>%
-    dplyr::summarize(score = sum(rank * trend * extent, na.rm = TRUE) / (sum(extent *
-                                                                        rank, na.rm = TRUE)),
-              dimension = 'trend') %>%
-    dplyr::ungroup()
+    trend_years <- (scen_year - 4):(scen_year)
+    cs_trend <-
+      CalculateTrend(status_data =cs_scores, trend_years = trend_years)
 
 
-  scores_CS <- rbind(status, trend)  %>%
-    dplyr::mutate(goal = 'CS') %>%
-    dplyr::select(goal, dimension, region_id, score)
 
-
-  ## create weights file for pressures/resilience calculations
-  weights <- extent %>%
-    dplyr::filter(extent > 0) %>%
-    dplyr::mutate(rank = habitat.rank[habitat]) %>%
-    dplyr::mutate(extent_rank = extent * rank) %>%
-    dplyr::mutate(layer = "element_wts_cs_km2_x_storage") %>%
-    dplyr::select(rgn_id = region_id, habitat, extent_rank, layer)
-
-  write.csv(
-    weights,
-    sprintf(here("region/temp/element_wts_cs_km2_x_storage_%s.csv"), scen_year),
-    row.names = FALSE
-  )
-
-  layers$data$element_wts_cs_km2_x_storage <- weights
-
+  cs_score <- dplyr::bind_rows(cs_status, cs_trend) %>%
+    dplyr::mutate(goal = 'CS')
 
   # return scores
   return(scores_CS)
