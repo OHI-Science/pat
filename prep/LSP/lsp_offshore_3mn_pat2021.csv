@@ -1,0 +1,181 @@
+rgn_id;rgn_name;año;area_km2;%
+1;Ancud;2017;37,0;5,9
+2;Aysen;2017;35,8;0,4
+3;Cabo de Hornos;2017;326,9;3,1
+4;Calbuco;2017;22,3;3,2
+5;Castro;2017;1,4;0,6
+6;Chaiten;2017;14,7;0,9
+7;Chonchi;2017;2,3;1,0
+8;Cisnes;2017;303,4;4,2
+9;Cochamo;2017;2,8;1,9
+10;Curaco de Velez;2017;1,4;1,8
+11;Dalcahue;2017;0,9;0,4
+12;Fresia;2017;5,7;5,0
+13;Guaitecas;2017;24,0;1,6
+14;Hualaihue;2017;38,9;6,7
+15;Laguna Blanca;2017;10,1;11,9
+16;Los Muermos;2017;32,8;24,0
+17;Maullin;2017;124,3;35,0
+18;Natales;2017;3,0;0,0
+19;Porvenir;2017;6,0;0,9
+20;Primavera;2017;0,8;0,1
+21;Puerto Montt;2017;53,0;15,2
+22;Puerto Varas;2017;3,5;41,6
+23;Punta Arenas;2017;4,5;0,0
+24;Puqueldon;2017;12,1;8,4
+25;Purranque;2017;47,1;32,0
+26;Queilen;2017;18,2;5,1
+27;Quellon;2017;5,1;0,3
+28;Quemchi;2017;44,9;7,5
+29;Quinchao;2017;96,1;14,5
+30;Rio Negro;2017;10,3;10,4
+31;Rio Verde;2017;19,4;0,6
+32;San Gregorio;2017;28,9;3,9
+33;San Juan de la Costa;2017;0,0;0,0
+34;Timaukel;2017;0,0;0,0
+35;Torres del Paine;2017;0,0;0,0
+36;Tortel;2017;0,0;0,0
+1;Ancud;2018;37,0;5,9
+2;Aysen;2018;99,1;1,1
+3;Cabo de Hornos;2018;326,9;3,1
+4;Calbuco;2018;52,0;7,4
+5;Castro;2018;4,2;1,7
+6;Chaiten;2018;26,9;1,6
+7;Chonchi;2018;2,3;1,0
+8;Cisnes;2018;367,9;5,1
+9;Cochamo;2018;2,9;1,9
+10;Curaco de Velez;2018;1,4;1,8
+11;Dalcahue;2018;0,9;0,4
+12;Fresia;2018;5,7;5,0
+13;Guaitecas;2018;23,9;1,6
+14;Hualaihue;2018;38,9;6,7
+15;Laguna Blanca;2018;10,1;11,9
+16;Los Muermos;2018;33,0;24,1
+17;Maullin;2018;124,3;34,6
+18;Natales;2018;3,0;0,0
+19;Porvenir;2018;6,0;0,9
+20;Primavera;2018;0,8;0,1
+21;Puerto Montt;2018;59,8;17,1
+22;Puerto Varas;2018;3,5;41,6
+23;Punta Arenas;2018;4,5;0,0
+24;Puqueldon;2018;12,1;8,4
+25;Purranque;2018;47,1;32,0
+26;Queilen;2018;18,2;5,1
+27;Quellon;2018;5,1;0,3
+28;Quemchi;2018;44,9;7,5
+29;Quinchao;2018;97,4;14,7
+30;Rio Negro;2018;10,3;10,4
+31;Rio Verde;2018;19,4;0,6
+32;San Gregorio;2018;28,9;3,9
+33;San Juan de la Costa;2018;0,0;0,0
+34;Timaukel;2018;674,9;36,1
+35;Torres del Paine;2018;0,0;0,0
+36;Tortel;2018;556,0;8,6
+1;Ancud;2019;46,5;7,4
+2;Aysen;2019;123,0;1,4
+3;Cabo de Hornos;2019;326,9;3,1
+4;Calbuco;2019;54,4;7,7
+5;Castro;2019;203,2;83,5
+6;Chaiten;2019;39,0;2,3
+7;Chonchi;2019;4,2;1,7
+8;Cisnes;2019;401,9;5,6
+9;Cochamo;2019;2,9;1,9
+10;Curaco de Velez;2019;17,7;22,0
+11;Dalcahue;2019;11,9;5,5
+12;Fresia;2019;5,7;5,0
+13;Guaitecas;2019;26,0;1,8
+14;Hualaihue;2019;38,9;6,7
+15;Laguna Blanca;2019;10,1;11,9
+16;Los Muermos;2019;33,0;24,1
+17;Maullin;2019;124,3;34,6
+18;Natales;2019;3,0;0,0
+19;Porvenir;2019;6,3;0,9
+20;Primavera;2019;205,3;25,6
+21;Puerto Montt;2019;60,7;17,4
+22;Puerto Varas;2019;3,5;41,6
+23;Punta Arenas;2019;4,5;0,0
+24;Puqueldon;2019;33,1;23,0
+25;Purranque;2019;47,1;32,0
+26;Queilen;2019;40,0;11,2
+27;Quellon;2019;63,9;3,8
+28;Quemchi;2019;75,2;12,6
+29;Quinchao;2019;145,8;22,1
+30;Rio Negro;2019;10,3;10,4
+31;Rio Verde;2019;20,3;0,6
+32;San Gregorio;2019;28,9;3,9
+33;San Juan de la Costa;2019;0,0;0,0
+34;Timaukel;2019;674,9;36,1
+35;Torres del Paine;2019;0,0;0,0
+36;Tortel;2019;556,0;8,6
+1;Ancud;2020;55,9;8,9
+2;Aysen;2020;123,6;1,4
+3;Cabo de Hornos;2020;1699,4;16,0
+4;Calbuco;2020;54,4;7,7
+5;Castro;2020;210,8;86,6
+6;Chaiten;2020;39,0;2,3
+7;Chonchi;2020;4,2;1,7
+8;Cisnes;2020;404,6;5,7
+9;Cochamo;2020;2,9;1,9
+10;Curaco de Velez;2020;17,8;22,1
+11;Dalcahue;2020;12,0;5,5
+12;Fresia;2020;5,7;5,0
+13;Guaitecas;2020;54,4;3,7
+14;Hualaihue;2020;38,9;6,7
+15;Laguna Blanca;2020;10,1;11,9
+16;Los Muermos;2020;33,0;24,1
+17;Maullin;2020;124,3;34,6
+18;Natales;2020;35,1;0,2
+19;Porvenir;2020;6,3;0,9
+20;Primavera;2020;205,5;25,6
+21;Puerto Montt;2020;60,7;17,4
+22;Puerto Varas;2020;3,5;41,6
+23;Punta Arenas;2020;4,5;0,0
+24;Puqueldon;2020;33,1;23,0
+25;Purranque;2020;47,1;32,0
+26;Queilen;2020;40,0;11,2
+27;Quellon;2020;63,9;3,8
+28;Quemchi;2020;75,2;12,6
+29;Quinchao;2020;145,8;22,1
+30;Rio Negro;2020;10,3;10,4
+31;Rio Verde;2020;20,3;0,6
+32;San Gregorio;2020;28,9;3,9
+33;San Juan de la Costa;2020;0,0;0,0
+34;Timaukel;2020;674,9;36,1
+35;Torres del Paine;2020;36,9;25,2
+36;Tortel;2020;556,0;8,6
+1;Ancud;2021;65,4;10,4
+2;Aysen;2021;123,6;1,4
+3;Cabo de Hornos;2021;1699,4;16,0
+4;Calbuco;2021;54,4;7,7
+5;Castro;2021;211,2;86,8
+6;Chaiten;2021;52,8;3,1
+7;Chonchi;2021;4,2;1,7
+8;Cisnes;2021;404,6;5,7
+9;Cochamo;2021;2,9;1,9
+10;Curaco de Velez;2021;18,1;22,4
+11;Dalcahue;2021;12,1;5,6
+12;Fresia;2021;5,8;5,0
+13;Guaitecas;2021;54,4;3,7
+14;Hualaihue;2021;38,9;6,7
+15;Laguna Blanca;2021;10,1;11,9
+16;Los Muermos;2021;34,3;25,0
+17;Maullin;2021;124,3;34,6
+18;Natales;2021;35,1;0,2
+19;Porvenir;2021;6,3;0,9
+20;Primavera;2021;205,5;25,6
+21;Puerto Montt;2021;60,7;17,4
+22;Puerto Varas;2021;3,5;41,6
+23;Punta Arenas;2021;4,5;0,0
+24;Puqueldon;2021;33,1;23,0
+25;Purranque;2021;47,1;32,0
+26;Queilen;2021;40,0;11,2
+27;Quellon;2021;64,0;3,8
+28;Quemchi;2021;77,4;12,9
+29;Quinchao;2021;145,8;22,1
+30;Rio Negro;2021;10,3;10,4
+31;Rio Verde;2021;20,3;0,6
+32;San Gregorio;2021;28,9;3,9
+33;San Juan de la Costa;2021;0,0;0,0
+34;Timaukel;2021;674,9;36,1
+35;Torres del Paine;2021;36,9;25,2
+36;Tortel;2021;556,0;8,6
