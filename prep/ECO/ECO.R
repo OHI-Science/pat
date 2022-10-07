@@ -29,7 +29,7 @@ eco_status = eco %>%
   filter(year >= max(year, na.rm=T) - 4) %>% # reference point is 5 years ago
   # across sectors, revenue is summed
   group_by(rgn_id, year) %>%
-  summarize(
+  dplyr::summarize(
     rev_sum  = sum(rev_adj, na.rm=T)) %>%
   # reference for revenue [e]: value in the current year (or most recent year) [c], relative to the value in a recent moving reference period [r] defined as 5 years prior to [c]
   arrange(rgn_id, year) %>%
@@ -63,14 +63,14 @@ eco_trend = eco %>%
   # get linear model coefficient per region-sector
   group_by(rgn_id, sector, weight) %>%
   do(mdl = lm(rev_adj ~ year, data=.)) %>%
-  summarize(
+  dplyr::summarize(
     weight = weight,
     rgn_id = rgn_id,
     sector = sector,
     sector_trend = pmax(-1, pmin(1, coef(mdl)[['year']] * 5))) %>%
   # get weighted mean across sectors per region
   group_by(rgn_id) %>%
-  summarize(
+  dplyr::summarize(
     score = weighted.mean(sector_trend, weight, na.rm=T)) %>%
   # format
   mutate(
