@@ -360,98 +360,95 @@ NP <- function(layers) {
   scen_year <- layers$data$scenario_year
 
 
-    ### Reassembles NP harvest information from separate data layers:
-    ### [rgn_name  rgn_id  product  year  tonnes  tonnes_rel  prod_weight]
-    #########################################.
+  ### Reassembles NP harvest information from separate data layers:
+  ### [rgn_name  rgn_id  product  year  tonnes  tonnes_rel  prod_weight]
+  #########################################.
 
-    ## load data from layers dataframe
-    h_tonnes <-
-      AlignDataYears(layer_nm = "np_harvest_tonnes", layers_obj = layers) %>%
-      dplyr::select(year = scenario_year, region_id = rgn_id, Producto, tonnes)
+  ## load data from layers dataframe
+  h_tonnes <-
+    AlignDataYears(layer_nm = "np_harvest_tonnes", layers_obj = layers) %>%
+    dplyr::select(year = scenario_year, region_id = rgn_id, Producto, tonnes)
 
-    h_tonnes_rel <-
-      AlignDataYears(layer_nm = 'np_harvest_tonnes_relative', layers_obj = layers) %>%
-      dplyr::select(year = scenario_year,
-             region_id = rgn_id,
-            Producto,
-             proportion)
+  h_tonnes_rel <-
+    AlignDataYears(layer_nm = 'np_harvest_tonnes_relative', layers_obj = layers) %>%
+    dplyr::select(year = scenario_year,
+                  region_id = rgn_id,
+                  Producto,
+                  proportion)
 
-    h_w <-
-      AlignDataYears(layer_nm = "np_harvest_product_weight", layers_obj = layers) %>%
-      dplyr::select(
-        year = scenario_year,
-        region_id = rgn_id,
-       Producto,
-        prod_weight = Weigth
-      )
-
-
-    # merge harvest in tonnes and usd
-    np_harvest <- h_tonnes %>%
-      dplyr::full_join(h_tonnes_rel, by = c('region_id', 'Producto', 'year')) %>%
-      dplyr::left_join(h_w, by = c('region_id', 'Producto', 'year'))
-
-
-    #Sustentabilidad
-    lyr1 = c('np_sust' = 'sustentabilidad')
-    np_sust = SelectLayersData(layers, layers=names(lyr1))
-    np_sust <- dplyr::select(np_sust, c("id_num", "Producto", "Sostenibilidad"))
-    np_sust<- dplyr:: rename(np_sust, c('region_id'='id_num'))
-
-
-    ##Merge
-    np_harvest<- merge(np_harvest, np_sust)
-
-    ## Calcular el estado de cada producto
-
-    np_status_all = np_harvest %>%
-      mutate(product_status = proportion * Sostenibilidad)
-
-    ##
-    np_status_all = np_status_all %>%
-      filter(!is.na(Sostenibilidad) & !is.na(prod_weight)& !is.na(product_status)) %>%
-      select(region_id, year, Producto, product_status, prod_weight) %>%
-      group_by(region_id, year) %>%
-      summarize(status = weighted.mean(product_status, prod_weight)) %>%
-      filter(!is.na(status)) %>%
-      ungroup()
-
-
-
-    ### Calculates NP status for all production years for each region, based
-    ### upon weighted mean of all products produced.
-    ### Reports scenario year as the NP status.
-    ### Calculates NP trend for each region, based upon slope of a linear
-    ### model over the past five years
-    ### Returns data frame with status and trend by region:
-    ### [goal   dimension   region_id   score]
-    #########################################.
-
-
-    ### get current status
-    np_status_current <- np_status_all %>%
-      filter(year == scen_year & !is.na(status)) %>%
-      mutate(dimension = 'status',
-             score     = round(status, 4)) %>%
-      select(region_id, dimension, score)
-    stopifnot(
-      min(np_status_current$score, na.rm = TRUE) >= 0,
-      max(np_status_current$score, na.rm = TRUE) <= 100
+  h_w <-
+    AlignDataYears(layer_nm = "np_harvest_product_weight", layers_obj = layers) %>%
+    dplyr::select(
+      year = scenario_year,
+      region_id = rgn_id,
+      Producto,
+      prod_weight = Weigth
     )
 
-    ### trend
 
-    trend_years <- (scen_year - 4):(scen_year)
+  # merge harvest in tonnes and usd
+  np_harvest <- h_tonnes %>%
+    dplyr::full_join(h_tonnes_rel, by = c('region_id', 'Producto', 'year')) %>%
+    dplyr::left_join(h_w, by = c('region_id', 'Producto', 'year'))
 
-    np_trend <-
-      CalculateTrend(status_data = np_status_all, trend_years = trend_years)
 
-    ### return scores
-    np_scores <- np_status_current %>%
-      full_join(np_trend, by = c('region_id', 'dimension', 'score')) %>%
-      mutate(goal = 'NP') %>%
-      select(goal, dimension, region_id, score) %>%
-      arrange(goal, dimension, region_id)
+  #Sustentabilidad
+  lyr1 = c('np_sust' = 'sustentabilidad')
+  np_sust = SelectLayersData(layers, layers=names(lyr1))
+  np_sust <- dplyr::select(np_sust, c("id_num", "Producto", "Sostenibilidad"))
+  np_sust<- dplyr:: rename(np_sust, c('region_id'='id_num'))
+
+
+  ##Merge
+  np_harvest<- merge(np_harvest, np_sust)
+
+  ## Calcular el estado de cada producto
+
+  np_status_all = np_harvest %>%
+    mutate(product_status = proportion * Sostenibilidad)
+
+  ##
+  np_status_all = np_status_all %>%
+    filter(!is.na(Sostenibilidad) & !is.na(prod_weight)& !is.na(product_status)) %>%
+    select(region_id, year, Producto, product_status, prod_weight) %>%
+    group_by(region_id, year) %>%
+    dplyr::summarize(status = weighted.mean(product_status, prod_weight)) %>%
+    filter(!is.na(status)) %>%
+    ungroup()
+
+
+
+  ### Calculates NP status for all production years for each region, based
+  ### upon weighted mean of all products produced.
+  ### Reports scenario year as the NP status.
+  ### Calculates NP trend for each region, based upon slope of a linear
+  ### model over the past five years
+  ### Returns data frame with status and trend by region:
+  ### [goal   dimension   region_id   score]
+  #########################################.
+
+
+  ### get current status
+  np_status_current <- np_status_all %>%
+    filter(year == scen_year & !is.na(status)) %>%
+    mutate(dimension = 'status',
+           score     = round(status, 4)) %>%
+    select(region_id, dimension, score)
+
+
+  ### trend
+
+  trend_years <- (scen_year - 4):(scen_year)
+
+  np_trend <-
+    CalculateTrend(status_data = np_status_all, trend_years = trend_years)
+
+  ### return scores
+  np_scores <- np_status_current %>%
+    full_join(np_trend, by = c('region_id', 'dimension', 'score')) %>%
+    mutate(goal = 'NP') %>%
+    select(goal, dimension, region_id, score) %>%
+    arrange(goal, dimension, region_id)
 
 
   return(np_scores)
@@ -818,63 +815,224 @@ TR <- function(layers) {
 
 LIV <- function(layers) {
 
-  scen_year <- layers$data$scenario_year
+  le_wages = SelectLayersData(layers, layers='le_wage_sector_year') %>%
+    dplyr::select(rgn_id = id_num, year, sector = category, wage_usd = val_num)
 
-  ## status data
-  status_liv <-
-    AlignDataYears(layer_nm = "liv_status", layers_obj = layers) %>%
-    dplyr::select(-layer_name, -liv_status_year) %>%
-    dplyr::mutate(goal = "LIV") %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, goal, score = status) %>%
-    dplyr::mutate(dimension = 'status')
+  le_jobs  = SelectLayersData(layers, layers='le_jobs_sector_year') %>%
+    dplyr::select(rgn_id = id_num, year, sector = category, jobs = val_num)
 
-  # trend data
-  trend_liv <-
-    AlignDataYears(layer_nm = "liv_trend", layers_obj = layers) %>%
-    dplyr::select(-layer_name, -liv_trend_year) %>%
-    dplyr::mutate(goal = "LIV") %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, goal, score = trend) %>%
-    dplyr::mutate(dimension = 'trend')
+  le_workforce_size = SelectLayersData(layers, layers='le_workforcesize_adj') %>%
+    dplyr::select(rgn_id = id_num, year, jobs_all = val_num)
+
+  le_unemployment = SelectLayersData(layers, layers='le_unemployment') %>%
+    dplyr::select(rgn_id = id_num, year, pct_unemployed = val_num)
 
 
-  scores <- rbind(status_liv, trend_liv) %>%
-    dplyr::select(region_id, goal, dimension, score)
+  ## multipliers from Table S10 (Halpern et al 2012 SOM)
+  multipliers_jobs = data.frame('sector' = c('Turismo','Pesca','Acuicultura', 'Alojamiento','Transporte'),
+                                'multiplier' = c(1, 1.582, 2.7, 1,1))
+  ## multipler not listed for tour (=1)
+
+  # calculate employment counts
+  le_employed = le_workforce_size %>%
+    left_join(le_unemployment, by = c('rgn_id', 'year')) %>%
+    mutate(proportion_employed = (100 - pct_unemployed) /100 ,
+           employed            = jobs_all * proportion_employed)
+
+  liv =
+    # adjust jobs
+    le_jobs %>%
+    left_join(multipliers_jobs, by = 'sector')          %>%
+    mutate(jobs_mult = jobs * multiplier)               %>%  # adjust jobs by multipliers
+    left_join(le_employed, by= c('rgn_id', 'year'))     %>%
+    mutate(jobs_adj = jobs_mult * proportion_employed)  %>% # adjust jobs by proportion employed
+    left_join(le_wages, by=c('rgn_id','year','sector')) %>%
+    arrange(year, sector, rgn_id)
+
+  # LIV calculations ----
+
+  # LIV status
+  liv_status1 = liv %>%
+    filter(!is.na(jobs_adj) & !is.na(wage_usd))
+  liv_status = liv_status1 %>%
+    filter(year >= max(year, na.rm=T) - 4) %>% # reference point is 5 years ago
+    arrange(rgn_id, year, sector) %>%
+    # summarize across sectors
+    group_by(rgn_id, year) %>%
+    dplyr :: summarise(
+      # across sectors, jobs are summed
+      jobs_sum  = sum(jobs_adj, na.rm=T),
+      # across sectors, wages are averaged
+      wages_avg = mean(wage_usd, na.rm=T)) %>%
+    group_by(rgn_id) %>%
+    arrange(rgn_id, year) %>%
+    mutate(
+      # reference for jobs [j]: value in the current year (or most recent year) [c], relative to the value in a recent moving reference period [r] defined as 5 years prior to [c]
+      jobs_sum_first  = first(jobs_sum),                     # note:  `first(jobs_sum, order_by=year)` caused segfault crash on Linux with dplyr 0.3.0.2, so using arrange above instead
+      # original reference for wages [w]: target value for average annual wages is the highest value observed across all reporting units
+      # new reference for wages [w]: value in the current year (or most recent year) [c], relative to the value in a recent moving reference period [r] defined as 5 years prior to [c]
+      wages_avg_first = first(wages_avg)) %>% # note:  `first(jobs_sum, order_by=year)` caused segfault crash on Linux with dplyr 0.3.0.2, so using arrange above instead
+    # calculate final scores
+    ungroup() %>%
+    mutate(
+      x_jobs  = pmax(-1, pmin(1,  jobs_sum / jobs_sum_first)),
+      x_wages = pmax(-1, pmin(1, wages_avg / wages_avg_first)),
+      score   = ((x_jobs + x_wages) / 2)*100  ,na.rm=T ) %>%
+    # filter for most recent year
+    filter(year == max(year, na.rm=T)) %>%
+    # format
+    dplyr::select(
+      region_id = rgn_id,
+      score) %>%
+    mutate(
+      goal      = 'LIV',
+      dimension = 'status')
+
+  ## LIV trend ----
+
+  # get trend across years as slope of individual sectors for jobs and wages
+  liv_trend = liv %>%
+    filter(!is.na(jobs_adj) & !is.na(wage_usd)) %>%
+    filter(year >= max(year, na.rm=T) - 4) %>% # reference point is 5 years ago
+    # get sector weight as total jobs across years for given region
+    arrange(rgn_id, year, sector) %>%
+    group_by(rgn_id, sector) %>%
+    mutate(
+      weight = sum(jobs_adj, na.rm=T)) %>%
+    # reshape into jobs and wages columns into single metric to get slope of both
+    reshape2::melt(id=c('rgn_id','year','sector','weight'), variable='metric', value.name='value') %>%
+    mutate(
+      sector = as.character(sector),
+      metric = as.character(metric)) %>%
+    # get linear model coefficient per metric
+    group_by(metric, rgn_id, sector, weight) %>%
+    do(mdl = lm(value ~ year, data=.)) %>%
+    dplyr::summarize(
+      metric = metric,
+      weight = weight,
+      rgn_id = rgn_id,
+      sector = sector,
+      sector_trend = pmax(-1, pmin(1, coef(mdl)[['year']] * 5))) %>%
+    arrange(rgn_id, metric, sector) %>%
+    # get weighted mean across sectors per region-metric
+    group_by(metric, rgn_id) %>%
+    dplyr::summarize(
+      metric_trend = weighted.mean(sector_trend, weight, na.rm=T)) %>%
+    # get mean trend across metrics (jobs, wages) per region
+    group_by(rgn_id) %>%
+    dplyr::summarize(
+      score = mean(metric_trend, na.rm=T)) %>%
+    # format
+    mutate(
+      goal      = 'LIV',
+      dimension = 'trend') %>%
+    dplyr::select(
+      goal, dimension,
+      region_id = rgn_id,
+      score)
+
+
+  ## create scores and rbind to other goal scores
+  scores = rbind(liv_status, liv_trend) %>%
+    dplyr::select(region_id,
+                  score,
+                  dimension,
+                  goal)
 
   return(scores)
 }
 
 
 ECO <- function(layers) {
+  ## read in data layers
+  le_gdp   = SelectLayersData(layers, layers='le_gdp')  %>%
+    dplyr::select(rgn_id = id_num, year, gdp_usd = val_num)
 
-  # NOTE: scripts and related files for calculating these subgoals is located:
-  # region/archive
-  # These data are no longer available and status/trend have not been updated since 2013
+  le_workforce_size = SelectLayersData(layers, layers='le_workforcesize_adj') %>%
+    dplyr::select(rgn_id = id_num, year, jobs_all = val_num)
 
-  scen_year <- layers$data$scenario_year
-
-  ## status data
-  status_eco <-
-    AlignDataYears(layer_nm = "eco_status", layers_obj = layers) %>%
-    dplyr::select(-layer_name, -eco_status_year) %>%
-    dplyr::mutate(goal = "ECO") %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, goal, score = status) %>%
-    dplyr::mutate(dimension = 'status')
-
-# trend data
-  trend_eco <-
-    AlignDataYears(layer_nm = "eco_trend", layers_obj = layers) %>%
-    dplyr::select(-layer_name, -eco_trend_year) %>%
-    dplyr::mutate(goal = "ECO") %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, goal, score = trend) %>%
-    dplyr::mutate(dimension = 'trend')
+  le_unemployment = SelectLayersData(layers, layers='le_unemployment') %>%
+    dplyr::select(rgn_id = id_num, year, pct_unemployed = val_num)
 
 
-    scores <- rbind(status_eco, trend_eco) %>%
-    dplyr::select(region_id, goal, dimension, score)
+  # calculate employment counts
+  le_employed = le_workforce_size %>%
+    left_join(le_unemployment, by = c('rgn_id', 'year')) %>%
+    mutate(proportion_employed = (100 - pct_unemployed) / 100,
+           employed            = jobs_all * proportion_employed)
+
+  # ECO calculations ----
+  eco = le_gdp %>%
+    mutate(
+      rev_adj = gdp_usd,
+      sector = 'gdp') %>%
+    # adjust rev with national GDP rates if available. Example: (rev_adj = gdp_usd / ntl_gdp)
+    dplyr::select(rgn_id, year, sector, rev_adj)
+
+  # ECO status
+  eco_status = eco %>%
+    filter(!is.na(rev_adj)) %>%
+    filter(year >= max(year, na.rm=T) - 4) %>% # reference point is 5 years ago
+    # across sectors, revenue is summed
+    group_by(rgn_id, year) %>%
+    dplyr::summarize(
+      rev_sum  = sum(rev_adj, na.rm=T)) %>%
+    # reference for revenue [e]: value in the current year (or most recent year) [c], relative to the value in a recent moving reference period [r] defined as 5 years prior to [c]
+    arrange(rgn_id, year) %>%
+    group_by(rgn_id) %>%
+    mutate(
+      rev_sum_first  = first(rev_sum)) %>%
+    # calculate final scores
+    ungroup() %>%
+    mutate(
+      score  = pmin(rev_sum / rev_sum_first, 1) * 100) %>%
+    # get most recent year
+    filter(year == max(year, na.rm=T)) %>%
+    # format
+    mutate(
+      goal      = 'ECO',
+      dimension = 'status') %>%
+    dplyr::select(
+      goal, dimension,
+      region_id = rgn_id,
+      score)
+
+  # ECO trend
+  eco_trend = eco %>%
+    filter(!is.na(rev_adj)) %>%
+    filter(year >= max(year, na.rm=T) - 4 ) %>% # 5 year trend
+    # get sector weight as total revenue across years for given region
+    arrange(rgn_id, year, sector) %>%
+    group_by(rgn_id, sector) %>%
+    mutate(
+      weight = sum(rev_adj, na.rm=T)) %>%
+    # get linear model coefficient per region-sector
+    group_by(rgn_id, sector, weight) %>%
+    do(mdl = lm(rev_adj ~ year, data=.)) %>%
+    dplyr::summarize(
+      weight = weight,
+      rgn_id = rgn_id,
+      sector = sector,
+      sector_trend = pmax(-1, pmin(1, coef(mdl)[['year']] * 5))) %>%
+    # get weighted mean across sectors per region
+    group_by(rgn_id) %>%
+    dplyr::summarize(
+      score = weighted.mean(sector_trend, weight, na.rm=T)) %>%
+    # format
+    mutate(
+      goal      = 'ECO',
+      dimension = 'trend') %>%
+    dplyr::select(
+      goal, dimension,
+      region_id = rgn_id,
+      score)
+
+  ## create scores and rbind to other goal scores
+  score = rbind(eco_status, eco_trend) %>%
+    dplyr::select(region_id,
+                  score,
+                  dimension,
+                  goal)
 
   return(scores)
 }
