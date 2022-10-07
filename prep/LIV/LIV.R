@@ -37,28 +37,12 @@ liv =
 # LIV status
 liv_status1 = liv %>%
   filter(!is.na(jobs_adj) & !is.na(wage_usd))
-if (nrow(liv_status)==0){
-  liv_status = liv %>%
-    dplyr::select(region_id=rgn_id) %>%
-    group_by(region_id) %>%
-    summarize(
-      goal      = 'LIV',
-      dimension = 'status',
-      score     = NA)
-  liv_trend = liv %>%
-    dplyr::select(region_id=rgn_id) %>%
-    group_by(region_id) %>%
-    summarize(
-      goal      = 'LIV',
-      dimension = 'trend',
-      score     = NA)
-} else {
-  liv_status = liv_status1 %>%
+liv_status = liv_status1 %>%
     filter(year >= max(year, na.rm=T) - 4) %>% # reference point is 5 years ago
     arrange(rgn_id, year, sector) %>%
     # summarize across sectors
     group_by(rgn_id, year) %>%
-    summarize(
+    dplyr :: summarise(
       # across sectors, jobs are summed
       jobs_sum  = sum(jobs_adj, na.rm=T),
       # across sectors, wages are averaged
@@ -77,7 +61,6 @@ if (nrow(liv_status)==0){
       x_jobs  = pmax(-1, pmin(1,  jobs_sum / jobs_sum_first)),
       x_wages = pmax(-1, pmin(1, wages_avg / wages_avg_first)),
       score   = ((x_jobs + x_wages) / 2)*100  ,na.rm=T ) %>%
-
     # filter for most recent year
     filter(year == max(year, na.rm=T)) %>%
     # format
@@ -87,9 +70,9 @@ if (nrow(liv_status)==0){
     mutate(
       goal      = 'LIV',
       dimension = 'status')
-  
+
   ## LIV trend ----
-  
+
   # get trend across years as slope of individual sectors for jobs and wages
   liv_trend = liv %>%
     filter(!is.na(jobs_adj) & !is.na(wage_usd)) %>%
@@ -107,7 +90,7 @@ if (nrow(liv_status)==0){
     # get linear model coefficient per metric
     group_by(metric, rgn_id, sector, weight) %>%
     do(mdl = lm(value ~ year, data=.)) %>%
-    summarize(
+    dplyr::summarize(
       metric = metric,
       weight = weight,
       rgn_id = rgn_id,
@@ -116,11 +99,11 @@ if (nrow(liv_status)==0){
     arrange(rgn_id, metric, sector) %>%
     # get weighted mean across sectors per region-metric
     group_by(metric, rgn_id) %>%
-    summarize(
+    dplyr::summarize(
       metric_trend = weighted.mean(sector_trend, weight, na.rm=T)) %>%
     # get mean trend across metrics (jobs, wages) per region
     group_by(rgn_id) %>%
-    summarize(
+    dplyr::summarize(
       score = mean(metric_trend, na.rm=T)) %>%
     # format
     mutate(
@@ -130,7 +113,7 @@ if (nrow(liv_status)==0){
       goal, dimension,
       region_id = rgn_id,
       score)
-}
+
 
 ## create scores and rbind to other goal scores
 scores = rbind(liv_status, liv_trend) %>%

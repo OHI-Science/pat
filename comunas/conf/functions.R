@@ -818,10 +818,6 @@ TR <- function(layers) {
 
 LIV <- function(layers) {
 
-  # NOTE: scripts and related files for calculating these subgoals is located:
-  # region/archive
-  # These data are no longer available and status/trend have not been updated since 2013
-
   scen_year <- layers$data$scenario_year
 
   ## status data
