@@ -74,10 +74,10 @@ status_data_final <- status_data %>%
 
 
 ### codigo para calcular tendencia de web:https://ohi-science.org/manual/#file-system-organization
-r.trend <- status_final_names %>%
+r.trend <- status_data_final %>%
   group_by(rgn_id) %>%
   do(mdl = lm(status ~ Year, data=.)) %>%
-  summarize( rgn_id = rgn_id,
+  dplyr::summarize( rgn_id = rgn_id,
              trend = coef(mdl)['Year']*5)
 
 ### seleccionamos estado actual, a?o 2021

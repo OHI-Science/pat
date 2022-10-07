@@ -8,7 +8,7 @@ library(reshape2)
 trash_pressure <- read_excel("prep/CW/trash_pressure.xlsx")
 
 #Ordenar la tabla en formato largo
-pres<-melt(po_trash, id.vars = c("rgn_id"))
+pres<-melt(cw_nutrientsmar, id.vars = c("rgn_id"))
 
 
 pres<- rename(pres, year = "variable")
@@ -18,7 +18,7 @@ pres$year<- as.numeric(pres$year)
 #PO
 pres<- rename(pres, pressure_score = "value")
 pres_po<- pres %>% filter(year == 2021)
-write.csv(pres_po, "comunas/layers/po_trash_pat2021.csv", row.names = F)
+write.csv(pres_po, "comunas/layers/po_nutrients_pat2021.csv", row.names = F)
 
 #Tendencia
 pres_trend <- data.frame()
@@ -36,7 +36,7 @@ pres_trend<- cbind(pres_trend, "year" = c(rep(2021, nrow(pres_trend))))
 pres_trend<- select(pres_trend, rgn_id, year, trend)
 
 
-write.csv(pres_trend, "comunas/layers/cw_chemical_trend_pat2021.csv", row.names = F)
+write.csv(pres_trend, "comunas/layers/cw_nutrient_trend_pat2021.csv", row.names = F)
 
 
 
