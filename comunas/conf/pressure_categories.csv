@@ -8,10 +8,10 @@ sp_alien,ecological,alien_species
 hd_coastal,ecological,habitat_destruction
 hd_marine,ecological,habitat_destruction
 fp_illegal,ecological,fishing_pressure
-fp_targetharvest,ecological,fishing_pressure
+fp_unstt,ecological,fishing_pressure
 cc_sst,ecological,climate_change
 cc_acid,ecological,climate_change
 cc_slr,ecological,climate_change
 ss_wgi,social,social
-in_dencul,ecological,infrastructure
-in_martraffic,ecological,infrastructure
+in_density,ecological,infrastructure
+in_traffic,ecological,infrastructure
