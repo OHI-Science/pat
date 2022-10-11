@@ -465,7 +465,7 @@ CS <- function(layers) {
   cs<- merge(cs, p_ref)
 
   cs_scores<- cs %>%
-    dplyr::mutate(status = value / p_ref) %>%
+    dplyr::mutate(status = (value / p_ref) *100) %>%
     dplyr:: select(region_id = "rgn_id", year, status)
 
   ## Estado actual
