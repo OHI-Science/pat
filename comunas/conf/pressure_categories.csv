@@ -5,6 +5,7 @@ po_pathogens_fan,ecological,pollution
 po_nutrients,ecological,pollution
 po_trash,ecological,pollution
 sp_alien,ecological,alien_species
+hd_infa,ecological,habitat_destruction
 hd_coastal,ecological,habitat_destruction
 hd_marine,ecological,habitat_destruction
 fp_illegal,ecological,fishing_pressure
@@ -13,5 +14,5 @@ cc_sst,ecological,climate_change
 cc_acid,ecological,climate_change
 cc_slr,ecological,climate_change
 ss_wgi,social,social
-in_density,ecological,infrastructure
-in_traffic,ecological,infrastructure
+hd_density,ecological,habitat_destruction
+hd_traffic,ecological,habitat_destruction
