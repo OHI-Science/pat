@@ -19,6 +19,9 @@ tourism <-
 sustain <-
   AlignDataYears(layer_nm = "tr_sustainability", layers_obj = layers) %>%
   dplyr::select(-layer_name)
+factor <-
+  AlignDataYears(layer_nm = "tr_factor", layers_obj = layers) %>%
+  dplyr::select(rgn_id, factor)
 
 tr_data  <-
   dplyr::full_join(tourism, sustain, by = c('rgn_id', 'scenario_year'))
@@ -29,7 +32,7 @@ tr_model <- tr_data %>%
                 Xtr = E * S)  %>%
   select(rgn_id, year= "scenario_year", Xtr)
 
-tr_modelnew<-merge(tr_model, tr_factor)
+tr_modelnew<-merge(tr_model, factor)
 
 ## Añadir el factor de corrección de turismo
 tr_modelnew<- tr_modelnew  %>%
@@ -38,7 +41,7 @@ tr_modelnew<- tr_modelnew  %>%
 ## Punto de ref
 p_ref<- tr_modelnew  %>%
   group_by(year) %>%
-  summarise(rgn_id, p_max = max(xtr), p_min = min(xtr))
+  dplyr::summarise(rgn_id, p_max = max(xtr), p_min = min(xtr))
 
 ## Scores
 tr_scores<- merge(p_ref, tr_modelnew)
@@ -64,11 +67,6 @@ tr_trend <-
 # bind status and trend by rows
 tr_score <- dplyr::bind_rows(tr_status, tr_trend) %>%
   dplyr::mutate(goal = 'TR')
-
-
-# return final scores
-scores <- tr_score %>%
-  dplyr::select(rgn_id, goal, dimension, score)
 
 
 return(scores)
