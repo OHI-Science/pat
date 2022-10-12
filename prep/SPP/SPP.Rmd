@@ -18,9 +18,11 @@ library(dplyr)
 
 ```{r}
 estatus_spp <- read_excel("C:/github/pat/prep/SPP/spp3.0.xlsx")
+estatus_spp1<- filter(estatus, year >=2000)
 ```
 
 ```{r}
+## Primer factor 
 status <- estatus_spp1 %>%
   dplyr::group_by(rgn_id, id) %>%
   dplyr::summarize(suma = sum(category), n_sp =n()) 
@@ -37,7 +39,7 @@ status <- status %>%
   dplyr::group_by(rgn_id) %>%
   dplyr::summarize(A = sum(B))
 
-##2
+##Segundo factor
 h<- estatus_spp1 %>% select(rgn_id, area_km2, id, area_km2) 
 h<-h[!duplicated(h), ]
 
@@ -47,26 +49,12 @@ status2 <- h %>%
 
 status<- merge(status, status2, all.y = FALSE)
 
-status_hb <- status %>%
-  dplyr::mutate(score= A / area_rgn ) 
-
-```
-
-
-
-
-```{r}
-h<- estatus_spp %>% select(scientific, category) 
-h<-h[!duplicated(h), ]
-
-estatus_spp1 <- estatus_spp1[!duplicated(estatus_spp1[,1:3]),] 
-
-estatus_spp1<- merge(estatus_spp1, h)
-```
-
-
-
-```{r}
+##Calculo del estado actual 
+status_spp <- status %>%
+  dplyr::mutate(score= (A / area_rgn)*100)    %>% 
+     dplyr::mutate(
+       dimension = 'status') %>% 
+  dplyr::select(region_id = "rgn_id", score, dimension)
 
 ```
 
