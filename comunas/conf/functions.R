@@ -1132,17 +1132,32 @@ CW <- function(layers) {
 
 
   # layers
-  trend_lyrs <-
-    c('cw_chemical_trend',
-      'cw_nutrient_trend',
-      'cw_coastalpopn_trend',
-      'cw_pathogen_trend')
-  prs_lyrs <-
-    c('po_pathogen',
-      'po_nutrient_3nm',
-      'po_chemical',
-      'po_trash')
+  prs = c('po_pathogen' = 'a',
+          'po_nutrients_3nm' = 'u',
+          'po_chemical' = 'l',
+          'po_trash'     = 'd',
+          'po_pathogens_fan' = 'f')
 
+  trends<-c('cw_nutrient_trend'  = 'fert_trend',
+            'cw_coastalpopn_trend' = 'popn_trend',
+            'cw_pathogen_trend'    = 'path_trend')
+
+
+# para calcular la media de los patogenos por saneamiento y por fan
+  p = SelectLayersData(layers, layers=names(prs))
+  pres_data1<-  p %>% filter(layer %in% c('po_pathogen', 'po_pathogens_fan')) %>%
+    group_by(id_num) %>%
+    dplyr::summarise(value= mean(val_num)) %>%
+    select(region_id = id_num, value )
+
+#Agregar todos los datos
+  pres_data<- p %>% filter(layer %in% c('po_nutrients_3nm' , 'po_chemical',
+                                        'po_trash' )) %>%
+    select(region_id = id_num, value = val_num) %>%
+    rbind(pres_data1)
+
+  t = SelectLayersData(layers, layers=names(trends))
+  trend_data<- t %>% select(region_id = id_num, value = val_num)
   # get data together:
 #  prs_data <- AlignManyDataYears(prs_lyrs) %>%
 #    dplyr::filter(scenario_year == scen_year) %>%

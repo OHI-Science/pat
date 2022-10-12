@@ -18,7 +18,7 @@ pres$year<- as.numeric(pres$year)
 #PO
 pres<- rename(pres, pressure_score = "value")
 pres_po<- pres %>% filter(year == 2021)
-write.csv(pres_po, "comunas/layers/po_nutrients_pat2021.csv", row.names = F)
+write.csv(cs, "comunas/layers/cs_seaweed_pat2021.csv", row.names = F)
 
 #Tendencia
 pres_trend <- data.frame()
@@ -39,28 +39,29 @@ pres_trend<- select(pres_trend, rgn_id, year, trend)
 write.csv(pres_trend, "comunas/layers/cw_nutrient_trend_pat2021.csv", row.names = F)
 
 
-
-
-
-
-
-
 prs = c('po_pathogen' = 'a',
         'po_nutrients_3nm' = 'u',
         'po_chemical' = 'l',
-        'po_trash'     = 'd')
+        'po_trash'     = 'd',
+        'po_pathogens_fan' = 'f')
 
-trends<-c('cw_chemical_trend'   = 'pest_trend',
-          'cw_nutrient_trend'  = 'fert_trend',
+trends<-c('cw_nutrient_trend'  = 'fert_trend',
           'cw_coastalpopn_trend' = 'popn_trend',
           'cw_pathogen_trend'    = 'path_trend')
 
 
 
-p = SelectLayersData(layers, layers=names(lyrs))
-pres_data<- p %>% filter(layer %in% c('po_pathogen','po_nutrients_3nm' , 'po_chemical',
+p = SelectLayersData(layers, layers=names(prs))
+pres_data1<-  p %>% filter(layer %in% c('po_pathogen', 'po_pathogens_fan')) %>%
+  group_by(id_num) %>%
+  dplyr::summarise(value= mean(val_num)) %>%
+  select(region_id = id_num, value )
+
+
+pres_data<- p %>% filter(layer %in% c('po_nutrients_3nm' , 'po_chemical',
                                       'po_trash' )) %>%
-  select(region_id = id_num, value = val_num)
+  select(region_id = id_num, value = val_num) %>%
+  rbind(pres_data1)
 
 t = SelectLayersData(layers, layers=names(trends))
 trend_data<- t %>% select(region_id = id_num, value = val_num)
