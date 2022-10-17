@@ -204,19 +204,20 @@ FP <- function(layers, scores) {
 
   scen_year <- layers$data$scenario_year
 
-  w <-
-    AlignDataYears(layer_nm = "fp_wildcaught_weight", layers_obj = layers) %>%
-    dplyr::filter(scenario_year == scen_year) %>%
+   w <- AlignDataYears(layer_nm = "fp_wildcaught_weight", layers_obj = layers) %>%
     dplyr::select(region_id = rgn_id, w_fis)
+  w <- w[!is.na(w$w_fis),]
 
   # scores
   s <- scores %>%
     dplyr::filter(goal %in% c('FIS', 'MAR')) %>%
     dplyr::filter(!(dimension %in% c('pressures', 'resilience'))) %>%
     dplyr::left_join(w, by = "region_id")  %>%
-    dplyr::mutate(w_mar = 1 - w_fis) %>%
-    dplyr::mutate(weight = ifelse(goal == "FIS", w_fis, w_mar))
 
+
+s<- merge(scores, w)
+s<-    s %>% dplyr::mutate(w_mar = 1 - w_fis) %>%
+  dplyr::mutate(weight = ifelse(goal == "FIS", w_fis, w_mar))
 
   ## Some warning messages due to potential mismatches in data:
   ## In the future consider filtering by scenario year so it's easy to see what warnings are attributed to which data
