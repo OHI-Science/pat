@@ -59,3 +59,10 @@ status_spp <- status %>%
 ```
 
 
+
+
+
+
+
+
+status_spp<- scores_spp %>%

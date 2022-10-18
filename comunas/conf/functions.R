@@ -289,8 +289,6 @@ s<-    s %>% dplyr::mutate(w_mar = 1 - w_fis) %>%
 
 
 AO <- function(layers) {
-  Sustainability <- 1.0
-
   scen_year <- layers$data$scenario_year
 
   gini<-
@@ -451,7 +449,7 @@ CS <- function(layers) {
 
   cs<-
     AlignDataYears(layer_nm = "cs_seaweed", layers_obj = layers) %>%
-    dplyr::select( rgn_id,year = scenario_year, value)
+    dplyr::select( rgn_id, year = "scenario_year", value)
 
   ##Punto de ref
 
