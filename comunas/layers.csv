@@ -36,7 +36,7 @@
 "CS","cs_seaweed","cs_seaweed_pat2021.csv","value","tonnes","","","","~/github/pat/comunas/layers/cs_seaweed_pat2021.csv","rgn_id",,"variable",,"value",,TRUE,,,0.00266223863120249,6.37235106631785,FALSE,,,,23,FALSE
 "pressure","cc_acid","cc_acid_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/cc_acid_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,0.175894548345613,1.00000001814464,FALSE,,,,23,FALSE
 "pressure","cc_slr","cc_slr_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/cc_sst_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,8.83454178706882e-05,1,TRUE,,,,23,FALSE
-"pressure","cc_sst","cc_sst_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/cc_slr_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,0.036289952500998,1,TRUE,,,,23,FALSE
+"pressure","cc_sst","cc_sst_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/cc_slr_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,0.0362899525009983,1,TRUE,,,,23,FALSE
 "pressure","fp_unstt","fp_unstt_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/fp_unstt_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,0.057569116779232,1,TRUE,,,,23,FALSE
 "pressure","hd_infa","hd_infa_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/hd_infa_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,0,1,TRUE,,,,23,FALSE
 "pressure","hd_marine","hd_marine_pat2021.csv","pressure_score","scaled 0-1","","","","~/github/pat/comunas/layers/hd_marine_pat2021.csv","rgn_id",,,,"pressure_score",,TRUE,,,0,1,TRUE,,,,23,FALSE
