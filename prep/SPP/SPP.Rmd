@@ -53,8 +53,8 @@ status<- merge(status, status2, all.y = FALSE)
 status_spp <- status %>%
   dplyr::mutate(score= (A / area_rgn)*100)    %>% 
      dplyr::mutate(
-       dimension = 'status') %>% 
-  dplyr::select(region_id = "rgn_id", score, dimension)
+       year = 2021 ) %>% 
+  dplyr::select(rgn_id, score)
 
 ```
 
