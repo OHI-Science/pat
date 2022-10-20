@@ -51,9 +51,5 @@
 "resilience","protection_ramsar","protection_ramsar_pat2021.csv","resilience_score","scaled 0-1",NA,NA,NA,"~/github/pat/comunas/layers/protection_amp_pat2021.csv","rgn_id",NA,NA,NA,"resilience_score",NA,"TRUE",NA,NA,0.2199853,0.2199853,"FALSE",NA,NA,NA,36,"TRUE"
 "resilience","wgi_all_pat2021.csv","wgi_all","resilience_score","scaled 0-1",NA,NA,NA,"~/github/pat/comunas/layers/wgi_all_pat2021.csv","rgn_id",NA,NA,NA,"resilience_score",NA,"TRUE",NA,NA,0.1036097,0.9107775,"FALSE",NA,NA,NA,36,"FALSE"
 "resilience","cc_consumption_ernc","cc_investigation_pat2021.csv","resilience_score","scaled 0-1",NA,NA,NA,"~/github/pat/comunas/layers/cc_consumption_ernc_pat2021.csv","rgn_id",NA,NA,NA,"resilience_score",NA,"TRUE",NA,NA,0.04629675,1,"FALSE",NA,NA,NA,36,"FALSE"
-"resilience","cc_investigation","cc_consumption_ernc_pat2021.csv","resilience_score","scaled 0-1",NA,NA,NA,"~/github/pat/comunas/layers/cc_consumption_ernc_pat2021.csv","rgn_id",NA,NA,NA,"resilience_score",NA,"TRUE",NA,NA,0.2061079,1,"FALSE",NA,NA,NA,36,"FALSE"
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
-NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,0.2061079,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"resilience","cc_investigation","cc_consumption_ernc_pat2021.csv","resilience_score","scaled 0-1",NA,NA,NA,"~/github/pat/comunas/layers/species_diversity_3mn_pat2021.csv","rgn_id",NA,NA,NA,"resilience_score",NA,"TRUE",NA,NA,0.2061079,1,"FALSE",NA,NA,NA,36,"FALSE"
+"resilience","species_diversity_3mn","species_diversity_3mn_pat2021.csv","resilience_score","scaled 0-1",NA,NA,NA,"~/github/pat/comunas/layers/cc_consumption_ernc_pat2021.csv","rgn_id",NA,NA,NA,"resilience_score",NA,"TRUE",NA,NA,0.005421073,1,"FALSE",NA,NA,NA,36,"FALSE"
