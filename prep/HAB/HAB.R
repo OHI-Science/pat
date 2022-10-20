@@ -10,6 +10,8 @@ sup<- select(Hab, c("rgn_id", "total_km2"))
 hab<- select(Hab, -c("total_km2", "macro"))
 hab<- melt(hab, id.vars = c("rgn_id"))
 hab$variable<- as.character(hab$variable)
+
+##Functions
 hab<- merge(hab, sup)
 
 
