@@ -653,15 +653,6 @@ CP <- function(layers) {
 TR <- function(layers) {
   scen_year <- layers$data$scenario_year
 
-  #Ordenar la tabla en formato largo
-  tr_sustainability_pat2021<-melt(tr_sustainability_pat2021, id.vars = c("rgn_id"))
-
-
-  tr_sustainability_pat2021<- rename(tr_sustainability_pat2021,s_score = "value")
-  tr_sustainability_pat2021<- rename(tr_sustainability_pat2021,year = "variable")
-  tr_sustainability_pat2021$year<- as.numeric(tr_sustainability_pat2021$year)
-
-  write.csv(tr_sustainability_pat2021, "comunas/layers/tr_sustainability_pat2021.csv")
 
   ## read in layers
   tourism <-
@@ -1019,60 +1010,60 @@ ICO <- function(layers) {
 LSP <- function(layers) {
   scen_year <- layers$data$scenario_year
 
-  ref_pct_cmpa <- 30
-  ref_pct_cp <- 30
+  ## read in layers
+  hab <-
+    AlignDataYears(layer_nm = "hab_all", layers_obj = layers) %>%
+    dplyr::select(rgn_id, variable, value)
 
-  # select data
-  total_area <-
-    rbind(layers$data$rgn_area_inland1km,
-          layers$data$rgn_area_offshore3nm) %>% #total offshore/inland areas
-    dplyr::select(region_id = rgn_id, area_km2, layer) %>%
-    tidyr::spread(layer, area_km2) %>%
-    dplyr::select(region_id,
-                  area_inland1km = rgn_area_inland1km,
-                  area_offshore3nm = rgn_area_offshore3nm)
+  sup <-
+    AlignDataYears(layer_nm = "hab_sup", layers_obj = layers) %>%
+    dplyr::select(rgn_id, total_km2)
 
-
-  offshore <-
-    AlignDataYears(layer_nm = "lsp_prot_area_offshore3nm", layers_obj = layers) %>%
-    dplyr::select(region_id = rgn_id,
-                  year = scenario_year,
-                  cmpa = area_km2)
-  inland <-
-    AlignDataYears(layer_nm = "lsp_prot_area_inland1km", layers_obj = layers) %>%
-    dplyr::select(region_id = rgn_id,
-                  year = scenario_year,
-                  cp = area_km2)
+  ##Functions
+  hab<- merge(hab, sup)
 
 
-  ry_offshore <-  layers$data$lsp_prot_area_offshore3nm %>%
-    select(region_id = rgn_id, year, cmpa = area_km2)
-  ry_inland <- layers$data$lsp_prot_area_inland1km %>%
-    select(region_id = rgn_id, year, cp = area_km2)
+  ##Punto de ref
+  p_ref<- hab %>%
+    dplyr::mutate(value = c(value*1.1),
+                  p_ref = value/ total_km2)  %>%
+    dplyr::group_by(variable) %>%
+    dplyr::summarise(ref = max(p_ref,  na.rm = TRUE)) %>%
+    dplyr::select(variable, ref)
 
-  lsp_data <- full_join(ry_offshore, ry_inland, by = c("region_id", "year"))
+  ## Numero de habitats
+  com_hab <- hab[!is.na(hab$value),]
+  com_h1<-data.frame( rgn_id= 1,
+                      n_h = nrow(table(com$variable)))
+  for (i in c(2:36)) {
+    com<- filter(com_hab, rgn_id == i)
+    com_h<-data.frame(rgn_id= i,
+                      n_h = nrow(table(com$variable)))
+    com_h1<- rbind(com_h1, com_h)
+  }
+  com_h1 <- com_h1[!is.na(com_h1$n_h),]
 
-  # fill in time series for all regions
-  lsp_data_expand <-
-    expand.grid(region_id = unique(lsp_data$region_id),
-                year = unique(lsp_data$year)) %>%
-    dplyr::left_join(lsp_data, by = c('region_id', 'year')) %>%
-    dplyr::arrange(region_id, year) %>%
-    dplyr::mutate(cp = ifelse(is.na(cp), 0, cp),
-                  cmpa = ifelse(is.na(cmpa), 0, cmpa)) %>%
-    dplyr::mutate(pa     = cp + cmpa)
+
+  ##Scores
+  hab<- merge(com_hab, p_ref)
+  hab<-merge(hab, sup)
+
+  scores_hab<- hab %>%
+    dplyr::mutate(Cc= value/total_km2)  %>%
+    dplyr::mutate(C= Cc/ref) %>%
+    dplyr::group_by(rgn_id) %>%
+    dplyr::summarise(c_sum = sum(C,  na.rm = TRUE)) %>%
+    dplyr::full_join(com_h1, by= c("rgn_id"))%>%
+    dplyr::mutate(status= (c_sum/n_h) *100)
 
 
-  # get percent of total area that is protected for inland1km (cp) and offshore3nm (cmpa) per year
-  # and calculate status score
-  status_data <- lsp_data_expand %>%
-    dplyr::full_join(total_area, by = "region_id") %>%
-    dplyr::mutate(
-      pct_cp    = pmin(cp   / area_inland1km   * 100, 100),
-      pct_cmpa  = pmin(cmpa / area_offshore3nm * 100, 100),
-      status    = (pmin(pct_cp / ref_pct_cp, 1) + pmin(pct_cmpa / ref_pct_cmpa, 1)) / 2
-    ) %>%
-    dplyr::filter(!is.na(status))
+  ##Status
+  scores_hab <- scores_hab %>%
+    mutate(dimension = 'status',
+           score     = round(status, 4)) %>%
+    mutate(goal = 'HAB')%>%
+    select(region_id = "rgn_id", goal, dimension, score)
+
 
   # extract status based on specified year
 
