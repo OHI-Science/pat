@@ -17,8 +17,8 @@ library(dplyr)
 
 
 ```{r}
-estatus_spp <- read_excel("C:/github/pat/prep/SPP/spp3.0.xlsx")
-estatus_spp1<- filter(estatus, year >=2000)
+estatus_spp <- read_excel("C:/github/pat/prep/SPP/estatus.csv")
+estatus<- filter(estatus, year >=2000)
 ```
 
 ```{r}
@@ -56,13 +56,12 @@ status_spp <- status %>%
        year = 2021 ) %>% 
   dplyr::select(rgn_id, score)
 
+##Calculo de la tendencia
+estatus<- merge(estatus, trend)
+
+trend_spp<- estatus %>% group_by(rgn_id) %>% summarise(trend = mean(trend))
+
 ```
 
 
 
-
-
-
-
-
-status_spp<- scores_spp %>%
