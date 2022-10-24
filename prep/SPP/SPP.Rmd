@@ -17,18 +17,15 @@ library(dplyr)
 
 
 ```{r}
-estatus_spp <- read_excel("C:/github/pat/prep/SPP/estatus.csv")
-estatus<- filter(estatus, year >=2000)
-```
+estatus <- read_csv("prep/SPP/estatus.csv")
 
-```{r}
 ## Primer factor 
-status <- estatus_spp1 %>%
+status <- estatus %>%
   dplyr::group_by(rgn_id, id) %>%
   dplyr::summarize(suma = sum(category), n_sp =n()) 
 
 
-h<- estatus_spp1 %>% select(rgn_id, id,  area_km2) 
+h<- estatus %>% select(rgn_id, id,  area_km2) 
 h<-h[!duplicated(h), ]
 
 status<- merge(status, h)
@@ -40,7 +37,7 @@ status <- status %>%
   dplyr::summarize(A = sum(B))
 
 ##Segundo factor
-h<- estatus_spp1 %>% select(rgn_id, area_km2, id, area_km2) 
+h<- estatus %>% select(rgn_id, area_km2, id, area_km2) 
 h<-h[!duplicated(h), ]
 
 status2 <- h %>%
@@ -57,9 +54,7 @@ status_spp <- status %>%
   dplyr::select(rgn_id, score)
 
 ##Calculo de la tendencia
-estatus<- merge(estatus, trend)
-
-trend_spp<- estatus %>% group_by(rgn_id) %>% summarise(trend = mean(trend))
+trend_spp<- estatus %>% group_by(rgn_id) %>% summarise(score = mean(trend))
 
 ```
 
