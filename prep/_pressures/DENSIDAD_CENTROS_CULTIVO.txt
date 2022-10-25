@@ -1,0 +1,36 @@
+prop_escapes_salmones: Proporción de escape de salmones
+
+
+
+1. Institución recolectora original (cuál Institución hizo la recolección de los datos de su fuente).
+CENTRO DE INVESTIGACIÓN DINÁMICA DE ECOSISTEMAS MARINOS DE ALTAS LATITUDES (IDEAL).
+
+
+2. Institución que provee los datos a este proyecto (si es distinta de la recolectora).
+SERVICIO NACIONAL DE PESCA Y ACUICULTURA (SERNAPESCA)
+
+
+3. Citas detalladas de la fuente, si se trata de uno o más artículos científicos.
+
+
+
+4. Método de captura de los datos. Si fue un Estudio realizado para obtener esos datos, si se hizo utilizando algún Instrumento de medición, cuál método se aplicó, si se utilizó una encuesta o formulario para recogerlos, etc.
+La institución SERNAPESCA desde el año 2010 posee el registro del número de individuos escapados desde centros de cultivo y el número de eventos de escapes por cada año. Los datos son registrados 
+a escala de provincia.  
+
+5. Período de tiempo que cubren los datos (año desde y año hasta). O enumeración de años si no son consecutivos.
+2010-2021
+
+6. Unidad en la cual vienen los valores.
+Numero de individuos escapadados y Número de eventos asociados a los escapes.
+
+
+7. Significado o explicación de qué significan los valores.
+
+
+
+8.	Observación o comentario sobre los datos.
+
+
+
+9. Significado y explicación de las columnas que se incluyen en el archivo.
