@@ -448,7 +448,7 @@ CS <- function(layers) {
   scen_year <- layers$data$scenario_year
 
   cs<-
-    AlignDataYears(layer_nm = "cs_seaweed", layers_obj = layers) %>%
+    AlignDataYears(layer_nm = "cs_kelp_forest", layers_obj = layers) %>%
     dplyr::select( rgn_id, year = "scenario_year", value)
 
   ##Punto de ref
