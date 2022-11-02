@@ -1,33 +1,26 @@
-goal,element,element_name,po_chemicals,po_pathogens,po_nutrients,po_nutrients_fan,po_trash,sp_alien,hd_coastal,hd_marine,fp_ilegal,fp_unstt,cc_sst,cc_acid,cc_slr,ss_wgi,in_density,in_traffic
-AO,,,,,,,,1,1,3,2,1,,,,1,,
-CP,Macroalgas,,,,,,,1,,3,,,3,1,2,1,,
-CP,Tupu,,,,,,,,,,,,,,2,1,,
-CP,Marismas y humedales,,,,,,,1,,,,,,,3,1,,
-CP,Playas,,,,,,,1,,,,,2,1,3,1,,
-CS,,,,,,,,,,,,,,,1,1,,
-CS,,,,,,,,1,,,,,,,2,1,,
-CS,,,,,,,,1,,,,,2,1,2,1,,
-CW,,,,3,,,3,,,,,,,,,1,,
-ECO,Transporte maritimo,,2,,1,,,1,,3,,,1,1,,1,,
-ECO,Alojamiento,,2,,1,,,1,2,2,3,1,,,,1,,
-ECO,Pesca,,2,,,,,,,,,,,,1,1,,
-ECO,Acuicultura,,,,,,1,,,,1,,,,,1,,
-ECO,Turismo ,,3,3,,,3,,,,,,,,2,1,,
-FIS,,,1,,1,,,1,2,2,3,1,,,,1,,
-HAB,Aguas frias ,,,,,,,1,,3,,,3,1,1,1,,
-HAB,Bosques de macrositis,,,,,,,,,,,,,,1,1,,
-HAB,Canales interiores,,,,,,,1,,,,,,,2,1,,
-HAB,Canales expuestos,,,,,,,1,,,,,2,1,2,1,,
-ICO,,,,,,,1,1,,2,2,,1,1,,1,,
-LIV,Transporte maritimo,,2,,1,,,1,2,2,3,1,,,,1,,
-LIV,Alojamiento,,2,,,,,,,,,,,,1,1,,
-LIV,Pesca,,,,,,1,,,,1,,,,,1,,
-LIV,Acuicultura,,,,,,,1,,,,,,,2,1,,
-LIV,Turismo ,,,,,,,,,,,,,,,1,,
-LSP,,,,,,,3,1,,2,,,,,1,1,,
-MAR,,,2,,,,,,,,,,,,1,1,,
-NP,Aceite,,1,,2,,,1,,3,,,3,1,1,1,,
-NP,Harina,,2,,1,,,1,2,,,2,1,,,1,,
-NP,Algas,,2,,1,,,1,,3,,,1,,,1,,
-SPP,,,2,,3,,1,1,3,2,3,1,1,1,,1,,
-TR,,,,3,,,3,,,,,,,,2,1,,
+goal,element,po_chemicals,po_pathogens,po_pathogens_fan,po_nutrients,po_trash,sp_alien,hd_infa,hd_coastal,hd_traffic,fp_ilegal,fp_unstt,cs_sst,cc_acid,cc_slr,ss_wgi
+AO,,1,2,2,1,1,2,2,1,1,1,2,2,1,,2
+CP,Macroalgas,,,,,,,,1,1,2,,2,2,,2
+CP,Tepu,,,,,,,,2,,,,2,,3,3
+CP,Marismas y humedales,1,,,2,1,,,3,,,,2,2,3,3
+CP,Playas,,,,,,,,1,,,,1,,3,3
+CS,,1,,,1,,,3,,,,,1,1,,2
+CW,,3,2,2,3,3,,3,,1,,,,,,3
+ECO,Transporte maritimo,,,,,,,,,,,,,,3,
+ECO,Alojamiento ,,,,,,,,,,2,,2,,,
+ECO,Pesca,,,2,,,,2,,,3,,,2,,2
+ECO,Acuicultura,,,2,1,,,2,,,,,3,2,,1
+ECO,Turismo,,1,,,2,,,2,,,,,,2,3
+MAR,Maricultura,1,2,3,1,1,1,1,,,,,1,2,,2
+FIS,Pesca,1,2,2,1,1,2,2,1,,1,2,2,1,,2
+HAB,Bosque de macrocystis,,,,,,,,1,,2,,2,2,,2
+HAB,Fiordos de agua fria ,,,,,1,,3,1,1,,,3,2,,2
+HAB,Canales patagonicos ,,,3,,,,2,1,,,,2,2,,2
+SPP,,2,,3,1,2,2,3,3,2,1,1,2,2,2,1
+ICO,,2,,3,1,2,2,3,3,2,1,1,2,2,2,2
+LSP,Costero,1,1,,1,1,1,3,,2,2,2,,,,3
+LSP,Terrestre,1,1,,2,2,1,,3,,2,2,,,2,3
+NP,Aceite,1,,,,,,1,,,,,2,1,,1
+NP,Harina,1,,,,,,1,,,,,2,1,,1
+NP,Algas,1,1,,1,,,1,,,,,1,2,,1
+TR,,1,2,,1,3,,,3,1,,,1,,1,2
