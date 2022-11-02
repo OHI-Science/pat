@@ -2,15 +2,6 @@ library(dplyr)
 library(readxl)
 
 meta<-read_excel("prep/_pressures/presiones.xlsx", sheet = "AO")
-                 ,
-                 col_types = c("text", "text",
-                               "numeric", "numeric", "numeric",
-                               "numeric", "numeric", "numeric",
-                               "numeric", "numeric", "numeric",
-                               "numeric", "numeric", "numeric",
-                               "numeric", "numeric", "numeric"))
-meta$po_chemicals<- as.character(meta$po_chemicals, na.rm = F)
-meta$po_chemicals<- as.numeric(meta$po_chemicals, na.rm = F)
 
 
 m1<- meta %>%
