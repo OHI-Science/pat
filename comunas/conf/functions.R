@@ -476,18 +476,20 @@ CS <- function(layers) {
 
     trend_years <- (scen_year - 4):(scen_year)
     cs_trend <-
-      CalculateTrend(status_data =cs_scores, trend_years = trend_years)
+      CalculateTrend(status_data =cs_scores, trend_years = trend_years) %>%
+      dplyr::mutate(dimension = 'trend')
 
 
 
   cs_score <- dplyr::bind_rows(cs_status, cs_trend) %>%
-    dplyr::mutate(goal = 'CS')
+    dplyr::mutate(goal = 'CS')%>%
+    dplyr::select(goal, dimension, region_id, score)
 
 
 
 
   # return scores
-  return(scores_CS)
+  return(cs_score)
 }
 
 
@@ -554,6 +556,10 @@ CP <- function(layers) {
                                                                     TRUE)),
           dimension = 'trend'))
   }
+
+  scores_CP<- scores_CP %>%
+    dplyr::mutate(goal = 'CP') %>%
+    dplyr::select(goal, dimension, region_id, score)
 
   ## create weights file for pressures/resilience calculations
 
@@ -645,7 +651,7 @@ TR <- function(layers) {
 }
 
 
-LIV <- function(layers) {
+LIV_ECO <- function(layers, subgoal) {
 
   le_wages = SelectLayersData(layers, layers='le_wage_sector_year') %>%
     dplyr::select(rgn_id = id_num, year, sector = category, wage_usd = val_num)
@@ -771,11 +777,6 @@ LIV <- function(layers) {
                   dimension,
                   goal)
 
-  return(scores)
-}
-
-
-ECO <- function(layers) {
   ## read in data layers
   le_gdp   = SelectLayersData(layers, layers='le_gdp')  %>%
     dplyr::select(rgn_id = id_num, year, gdp_usd = val_num)
@@ -866,11 +867,6 @@ ECO <- function(layers) {
                   dimension,
                   goal)
 
-  return(scores)
-}
-
-LE <- function(scores, layers) {
-
   s <- scores %>%
     dplyr::filter(goal %in% c('LIV', 'ECO'),
            dimension %in% c('status', 'trend', 'future', 'score')) %>%
@@ -929,6 +925,9 @@ ICO <- function(layers) {
   s.status = cbind(r.status, data.frame('dimension'='status'))
   s.trend  = cbind(r.trend , data.frame('dimension'='trend' ))
   scores = cbind(rbind(s.status, s.trend), data.frame('goal'='ICO'))
+
+  scores<- scores %>%
+    dplyr::select(region_id, goal,dimension, score) %>%data.frame()
 
   return(scores)
 
