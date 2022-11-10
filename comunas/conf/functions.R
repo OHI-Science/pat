@@ -528,7 +528,7 @@ CP <- function(layers) {
 
   ##Rankeo del habitat
   habitat.rank <- data.frame(habitat = c('Macrocystis',  'Marismas' ,  'Playas' ,  'Tepu'),
-                    rank =c(3,3, 2, 1)  )
+                    rank =c(1,  1, 1, 1)  )
 
   d<- merge(d, habitat.rank)
 
@@ -537,8 +537,7 @@ CP <- function(layers) {
     dplyr::filter(!is.na(rank) & !is.na(health) & !is.na(extent)) %>%
     dplyr::group_by(region_id) %>%
     dplyr::summarize(score = pmin(1, sum(rank * health * extent, na.rm = TRUE) /
-                                    (sum(
-                                      extent * rank, na.rm = TRUE
+                                    (sum(sum(extent) * rank, na.rm = TRUE
                                     ))) * 100) %>%
     dplyr::mutate(dimension = 'status') %>%
     ungroup()
