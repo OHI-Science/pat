@@ -912,22 +912,20 @@ ICO <- function(layers) {
                    'Creciendo' =  0.5)
 
   # status
-  r.status = rename(ddply(rk, .(region_id), function(x){
-    mean(1 - w.risk_category[x$risk_category], na.rm=T) * 100 }),
-    c('V1'='score'))
+  r.status = data.frame(ddply(rk, .(region_id), function(x){
+    mean(1 - w.risk_category[x$risk_category], na.rm=T) * 100 }))
+
 
   # trend
-  r.trend = rename(ddply(rk, .(region_id), function(x){
-    mean(w.popn_trend[x$popn_trend], na.rm=T) }),
-    c('V1'='score'))
+  r.trend = data.frame(ddply(rk, .(region_id), function(x){
+    mean(w.popn_trend[x$popn_trend], na.rm=T) }))
 
   # return scores
   s.status = cbind(r.status, data.frame('dimension'='status'))
   s.trend  = cbind(r.trend , data.frame('dimension'='trend' ))
-  scores = cbind(rbind(s.status, s.trend), data.frame('goal'='ICO'))
 
-  scores<- scores %>%
-    dplyr::select(region_id, goal,dimension, score) %>%data.frame()
+  scores <- cbind(rbind(s.status, s.trend), data.frame('goal'='ICO'))  %>%
+      dplyr::select(region_id, goal,dimension, score = V1) %>%data.frame()
 
   return(scores)
 
@@ -1014,18 +1012,6 @@ LSP <- function(layers) {
 
   total_area["habitat"][total_area["habitat"] == "rgn_area_inland1mn"] <- "inland"
   total_area["habitat"][total_area["habitat"] == "rgn_area_offshore3mn"] <- "offshore"
-
-  weights<- total_area %>%
-  mutate(layer = 'element_wts_lsp_km2_x_protection')
-
-  write.csv(
-    weights,
-    sprintf(here("comunas/temp/element_wts_lsp_km2_x_protection.csv"), scen_year),
-    row.names = FALSE
-  )
-
-  layers$data$element_wts_lsp_km2_x_protection <- weights
-
 
 
   # return scores
@@ -1160,7 +1146,7 @@ HAB <- function(layers) {
   ## Numero de habitats
   com_hab <- hab[!is.na(hab$value),]
   com_h1<-data.frame( rgn_id= 1,
-                      n_h = nrow(table(com$variable)))
+                      n_h = nrow(table(com_hab$variable)))
   for (i in c(2:36)) {
     com<- filter(com_hab, rgn_id == i)
     com_h<-data.frame(rgn_id= i,
@@ -1222,12 +1208,11 @@ SPP <- function(layers) {
 
 status <- AlignDataYears(layer_nm = "spp_status", layers_obj = layers) %>%
    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id,
-                  score) %>%
+    dplyr::select(region_id = rgn_id, score) %>%
   dplyr::mutate(dimension = "status") %>%
   dplyr::mutate(score = score * 100)
 
-trend <- layers$data$spp_trend %>%
+  trend <- AlignDataYears(layer_nm = "spp_trend", layers_obj = layers) %>%
   dplyr::select(region_id = rgn_id,
                 score) %>%
   dplyr::mutate(dimension = "trend")
