@@ -1,7 +1,7 @@
 "goal","element","element_name","po_chemical","po_pathogen","po_pathogens_fan","po_nutrients_3nm","po_trash","sp_exhaust","hd_marine","hd_coastal","hd_traffic","hd_density","fp_ilegal","fp_unstt","cc_sst","cc_acid","cc_slr","ss_wgi"
-"AO",NA,NA,1,2,2,1,1,2,2,1,1,1,1,2,2,1,NA,2
-"CP","Macroalgas",NA,NA,NA,NA,NA,NA,NA,NA,1,1,1,2,NA,2,2,NA,2
-"CP","Tepu",NA,NA,NA,NA,NA,NA,NA,NA,2,NA,NA,NA,NA,2,NA,3,3
+"AO",,,1,2,2,1,1,2,2,1,1,1,1,2,2,1,,2
+"CP","Macroalgas",,,,,,,,,1,1,1,2,NA,2,2,NA,2
+"CP","Tepu",,,,,,,,,2,,,,,2,,3,3
 "CP","Marismas",NA,1,NA,NA,2,1,NA,NA,3,NA,NA,NA,NA,2,2,3,3
 "CP","Playas",NA,NA,NA,NA,NA,NA,NA,NA,1,NA,NA,NA,NA,1,NA,3,3
 "CS",NA,NA,1,NA,NA,1,NA,NA,3,NA,NA,1,NA,NA,1,1,NA,2
