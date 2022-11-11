@@ -1,43 +1,37 @@
-goal,element,element_name,po_chemicals,po_chemicals_3nm,po_pathogens,po_nutrients,po_nutrients_3nm,po_trash,sp_alien,sp_genetic,hd_subtidal_sb,hd_subtidal_hb,hd_intertidal,fp_com_hb,fp_com_lb,fp_art_lb,fp_art_hb,fp_targetharvest,cc_sst,cc_acid,cc_uv,cc_slr,ss_wgi,ss_spi
-AO,,,,1,,,1,,1,,1,3,1,2,1,,3,,,,,,1,1
-CP,coral,,,1,,,2,,1,,,3,,,,,,,3,1,1,2,1,1
-CP,mangrove,,,1,,,1,,,,,,3,,,,,,,,,2,1,1
-CP,saltmarsh,,,1,,,2,,1,,,,3,,,,,,,,,3,1,1
-CP,seagrass,,,2,,,3,,1,,,,3,,,,,,2,1,,3,1,1
-CP,seaice_shoreline,,,,,,,,,,,,,,,,,,3,,,2,1,1
-CS,mangrove,,,1,,,1,,,,,,3,,,,,,,,,1,1,1
-CS,saltmarsh,,,1,,,2,,1,,,,3,,,,,,,,,2,1,1
-CS,seagrass,,,2,,,3,,1,,,,3,,,,,,2,1,,2,1,1
-CW,,,,3,3,,3,3,,,,,,,,,,,,,,,1,1
-ECO,aqf,Aquarium Trade Fishing,2,,,1,,,1,,,3,,,,1,3,,1,1,,,1,1
-ECO,cf,Commercial Fishing,2,,,1,,,1,1,2,2,1,3,1,1,2,,,,,,1,1
-ECO,mar,Mariculture,2,,,,3,,,,,,,,,,,,,,,1,1,1
-ECO,mmw,Marine Mammal Watching,,,,,,1,,,,,,1,,,,,,,,,1,1
-ECO,tour,Tourism,3,,3,,3,3,,,,,,,,,,,,,,2,1,1
-ECO,wte,Wave & Tidal Energy,,,,,,,,,,,,,,,,,,,,1,1,1
-FIS,,,1,,,1,,,1,1,2,2,1,3,1,1,2,,,,,,1,1
-HAB,coral,,,1,,,2,,1,,,3,,,,,3,,3,1,1,1,1,1
-HAB,mangrove,,,1,,,1,,,,,,3,,,,,,,,,1,1,1
-HAB,saltmarsh,,,1,,,2,,1,,,,3,,,,,,,,,2,1,1
-HAB,seagrass,,,2,,,3,,1,,,,3,,,,,,2,1,,2,1,1
-HAB,seaice_edge,,,,,,,,,,,,,,,,,,3,,,1,1,1
-HAB,soft_bottom,,,2,,,2,,1,,3,,,3,1,1,,,,,,,1,1
-ICO,,,,3,,,1,1,1,,,2,3,2,,,2,2,1,1,,,1,1
-LIV,cf,Commercial Fishing,2,,,1,,,1,1,2,2,1,3,1,1,2,,,,,,1,1
-LIV,mar,Mariculture,2,,,,3,,,,,,,,,,,,,,,1,1,1
-LIV,mmw,Marine Mammal Watching,,,,,,1,,,,,,1,,,,,,,,,1,1
-LIV,ph,Ports & Harbors,,,,,,,1,,,,,,,,,,,,,2,1,1
-LIV,sb,Ship & Boat Building,,,,,,,,,,,,,,,,,,,,,1,1
-LIV,tour,Tourism,3,,3,,3,3,,,,,,,,,,,,,,2,1,1
-LIV,tran,Transportation & Shipping,,,,,,,1,,,,,,,,,,,,,,1,1
-LIV,wte,Wave & Tidal Energy,,,,,,,,,,,,,,,,,,,,1,1,1
-LSP,,,,2,,,2,3,1,,,2,3,,,,,,,,,1,1,1
-MAR,,,2,,,,3,,,,,,,,,,,,,,,1,1,1
-NP,corals,,1,,,2,,,1,,,3,,,,,,,3,1,1,1,1,1
-NP,fish_oil,,2,,,1,,,1,,2,,,,2,,,,1,,,,1,1
-NP,ornamentals,,2,,,1,,,1,,,3,,,,1,3,,1,,,,1,1
-NP,seaweeds,,2,,,2,,,1,,,,1,,,,,,1,,,,1,1
-NP,shells,,,,,1,,,1,,2,,1,,,,,,1,1,,,1,1
-NP,sponges,,,,,1,,,1,,3,,,,,,1,,1,1,,,1,1
-SPP,,,2,,,3,,1,1,1,3,2,2,3,1,1,2,1,1,1,1,,1,1
-TR,,,,3,3,,3,3,,,,,,,,,,,,,,2,1,1
+"goal","element","element_name","po_chemical","po_pathogen","po_pathogens_fan","po_nutrients_3nm","po_trash","sp_exhaust","hd_marine","hd_coastal","hd_traffic","hd_density","fp_ilegal","fp_unstt","cc_sst","cc_acid","cc_slr","ss_wgi"
+"AO",NA,NA,1,2,2,1,1,2,2,1,1,1,1,2,2,1,NA,2
+"CP","Macroalgas",NA,NA,NA,NA,NA,NA,NA,NA,1,1,1,2,NA,2,2,NA,2
+"CP","Tepu",NA,NA,NA,NA,NA,NA,NA,NA,2,NA,NA,NA,NA,2,NA,3,3
+"CP","Marismas",NA,1,NA,NA,2,1,NA,NA,3,NA,NA,NA,NA,2,2,3,3
+"CP","Playas",NA,NA,NA,NA,NA,NA,NA,NA,1,NA,NA,NA,NA,1,NA,3,3
+"CS",NA,NA,1,NA,NA,1,NA,NA,3,NA,NA,1,NA,NA,1,1,NA,2
+"CW",NA,NA,3,2,2,3,3,NA,3,NA,1,2,NA,NA,NA,NA,NA,3
+"ECO","Transporte maritimo",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3,NA
+"ECO","Alojamiento",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2,NA,2,NA,NA,NA
+"ECO","Pesca",NA,NA,NA,2,NA,NA,NA,2,NA,NA,2,3,NA,NA,2,NA,2
+"ECO","Acuicultura",NA,NA,NA,2,1,NA,NA,2,NA,NA,NA,NA,NA,3,2,NA,1
+"ECO","Turismo",NA,NA,1,NA,NA,2,NA,NA,2,NA,NA,NA,NA,NA,NA,2,3
+"MAR","Maricultura",NA,1,2,3,1,1,1,1,NA,NA,NA,NA,NA,1,2,NA,2
+"FIS","Pesca",NA,1,2,2,1,1,2,2,1,NA,2,1,2,2,1,NA,2
+"SPP",NA,NA,2,NA,3,1,2,2,3,3,2,2,1,1,2,2,2,1
+"ICO",NA,NA,2,NA,3,1,2,2,3,3,2,3,1,1,2,2,2,2
+"LSP","Inland",NA,1,1,NA,1,1,1,3,NA,2,2,2,2,NA,NA,NA,3
+"LSP","Offshore",NA,1,1,NA,2,2,1,NA,3,NA,NA,2,2,NA,NA,2,3
+"NP","Aceite",NA,1,NA,NA,NA,NA,NA,1,NA,NA,NA,NA,NA,2,1,NA,1
+"NP","Harina",NA,1,NA,NA,NA,NA,NA,1,NA,NA,NA,NA,NA,2,1,NA,1
+"NP","Algas",NA,1,1,NA,1,NA,NA,1,NA,NA,1,NA,NA,1,2,NA,1
+"TR",NA,NA,1,2,NA,1,3,NA,NA,3,1,1,NA,NA,1,NA,1,2
+"LIV","Transporte maritimo",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,3,NA
+"LIV","Alojamiento",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,2,NA,2,NA,NA,NA
+"LIV","Pesca",NA,NA,NA,2,NA,NA,NA,2,NA,NA,2,3,NA,NA,2,NA,2
+"LIV","Acuicultura",NA,NA,NA,2,1,NA,NA,2,NA,NA,NA,NA,NA,3,2,NA,1
+"LIV","Turismo",NA,NA,1,NA,NA,2,NA,NA,2,NA,NA,NA,NA,NA,NA,2,3
+"HAB","MY",NA,NA,NA,NA,NA,NA,NA,NA,1,NA,NA,2,NA,2,2,NA,2
+"HAB","AF",NA,NA,NA,NA,NA,1,NA,3,1,1,NA,NA,NA,3,2,NA,2
+"HAB","CA",NA,NA,NA,3,NA,NA,NA,2,1,NA,NA,NA,NA,2,2,NA,2
+"HAB","CI",NA,2,1,3,2,2,1,2,2,1,2,2,2,1,2,1,2
+"HAB","FB",NA,2,NA,NA,2,2,NA,3,NA,NA,2,2,1,2,2,NA,2
+"HAB","FD",NA,1,NA,NA,1,2,NA,2,NA,NA,2,1,1,1,2,NA,2
+"HAB","CE",NA,NA,NA,NA,NA,1,NA,NA,NA,NA,NA,NA,NA,NA,NA,2,1
+"HAB","EM",NA,NA,NA,1,1,2,NA,NA,1,1,NA,NA,NA,1,1,2,2
+"HAB","Gp",NA,NA,NA,NA,NA,2,NA,NA,NA,NA,NA,NA,NA,NA,NA,2,NA
