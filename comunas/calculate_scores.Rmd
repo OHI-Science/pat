@@ -80,7 +80,7 @@ Run this to create flower plots for each region.
 ## source script (to be incorporated into ohicore)
 source('https://raw.githubusercontent.com/OHI-Science/arc/master/circle2016/plot_flower_local.R')
 
-PlotFlower(assessment_name = "Example", dir_fig_save = "reports/figures")
+PlotFlower(assessment_name = "OHI+ Patagonia Chilena", dir_fig_save = "comunas/reports/figures")
 ```
 
 
