@@ -4,7 +4,7 @@ layers_id_fields    = c('rgn_id','cntry_key', 'fao_id', 'fao_saup_id', 'country_
 
 # the official list of regions (and corresponding names)
 # (note: this is a .csv file in the layers folder)
-layer_region_labels = 'rgn_global'
+layer_region_labels = 'rgn_area'
 
 # the official ocean areas of each region (used to weight each subregions contribution to the region score)
 # (note: this is a .csv file in the layers folder)
@@ -14,12 +14,14 @@ layer_region_areas  = 'rgn_area'
 
 # For goals with elements (e.g., for coastal protection: mangrove, saltmarsh, seagrass), these data layers describe how to weight the contribution of each goal element to calculate the final goal pressure and resilience dimensions.
 # (note: these are .csv files in the layers folder)
-resilience_element = list('NP'  = 'np_harvest_product_weight',    # populated in CS() in functions.R
-                          'CP'  = 'element_wts_cp_km2_x_protection',   # populated in CP() in functions.R
+resilience_element = list('NP'  = 'np_product_weight',
+                          'CP'  = 'element_wts_cp_km2_x_protection',
+                          'LIV' = 'le_sector_weight',
+                          'ECO' = 'le_sector_weight',
                           'HAB' = 'element_wts_hab_pres_abs',
-                          'LSP' = 'element_wts_lsp_km2_x_protection')          # populated in HAB() in functions.R
+                          'LSP' = 'element_wts_lsp_km2_x_protection')
 
-pressures_element  = list('NP'  = 'np_harvest_product_weight',     # populated in CS() in functions.R
+pressures_element  = list('NP'  = 'np_product_weight',     # populated in CS() in functions.R
                           'CP'  = 'element_wts_cp_km2_x_protection',   # populated in CS() in functions.R
                           'LIV' = 'le_sector_weight',
                           'ECO' = 'le_sector_weight',

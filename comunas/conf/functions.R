@@ -125,6 +125,8 @@ FIS <- function(layers) {
   scores <- rbind(status, trend) %>%
     dplyr::mutate(goal = 'FIS')
 
+  scores <- scores[!is.na(scores$score),]
+
 
   return(scores)
 }
@@ -196,7 +198,7 @@ MAR <- function(layers) {
     dplyr::mutate(goal = 'MAR')
   scores = rbind(score, scores)
 
-  return(scores)
+  return(score)
 }
 
 
@@ -213,67 +215,13 @@ FP <- function(layers, scores) {
     dplyr::filter(goal %in% c('FIS', 'MAR')) %>%
     dplyr::filter(!(dimension %in% c('pressures', 'resilience'))) %>%
     dplyr::left_join(w, by = "region_id")  %>%
-
-
-s<- merge(scores, w)
-s<-    s %>% dplyr::mutate(w_mar = 1 - w_fis) %>%
-  dplyr::mutate(weight = ifelse(goal == "FIS", w_fis, w_mar))
+    dplyr::mutate(w_mar = 1 - w_fis) %>%
+    dplyr::mutate(weight = ifelse(goal == "FIS", w_fis, w_mar))
 
   ## Some warning messages due to potential mismatches in data:
   ## In the future consider filtering by scenario year so it's easy to see what warnings are attributed to which data
   # NA score but there is a weight
-  tmp <-
-    dplyr::filter(s,
-           goal == 'FIS' &
-             is.na(score) & (!is.na(w_fis) & w_fis != 0) & dimension == "score")
-  if (dim(tmp)[1] > 0) {
-    warning(paste0(
-      "Check: these regions have a FIS weight but no score: ",
-      paste(as.character(tmp$region_id), collapse = ", ")
-    ))
-  }
 
-  tmp <-
-    dplyr::filter(s,
-           goal == 'MAR' &
-             is.na(score) & (!is.na(w_mar) & w_fis != 0) & dimension == "score")
-  if (dim(tmp)[1] > 0) {
-    warning(paste0(
-      "Check: these regions have a MAR weight but no score: ",
-      paste(as.character(tmp$region_id), collapse = ", ")
-    ))
-  }
-
-  # score, but the weight is NA or 0
-  tmp <-
-    dplyr::filter(
-      s,
-      goal == 'FIS' &
-        (!is.na(score) &
-           score > 0) &
-        (is.na(w_fis) | w_fis == 0) & dimension == "score" & region_id != 0
-    )
-  if (dim(tmp)[1] > 0) {
-    warning(paste0(
-      "Check: these regions have a FIS score but weight is NA or 0: ",
-      paste(as.character(tmp$region_id), collapse = ", ")
-    ))
-  }
-
-  tmp <-
-    dplyr::filter(
-      s,
-      goal == 'MAR' &
-        (!is.na(score) &
-           score > 0.05) &
-        (is.na(w_mar) | w_mar == 0) & dimension == "score" & region_id != 0
-    )
-  if (dim(tmp)[1] > 0) {
-    warning(paste0(
-      "Check: these regions have a MAR score but weight is NA or 0: ",
-      paste(as.character(tmp$region_id), collapse = ", ")
-    ))
-  }
 
   s <- s  %>%
     dplyr::group_by(region_id, dimension) %>%
@@ -561,21 +509,6 @@ CP <- function(layers) {
     dplyr::mutate(goal = 'CP') %>%
     dplyr::select(goal, dimension, region_id, score)
 
-  ## create weights file for pressures/resilience calculations
-
-  weights <-d %>%
-    filter(extent > 0) %>%
-    mutate(extent_rank = extent * rank) %>%
-    mutate(layer = "element_wts_cp_km2_x_protection") %>%
-    select(rgn_id = region_id, habitat, extent_rank, layer)
-
-  write.csv(
-    weights,
-    sprintf("temp/element_wts_cp_km2_x_protection_%s.csv", scen_year),
-    row.names = FALSE
-  )
-
-  layers$data$element_wts_cp_km2_x_protection <- weights
 
 
   # return scores
@@ -651,7 +584,8 @@ TR <- function(layers) {
 }
 
 
-LIV_ECO <- function(layers, subgoal) {
+
+LIV<- function(layers) {
 
   le_wages = SelectLayersData(layers, layers='le_wage_sector_year') %>%
     dplyr::select(rgn_id = id_num, year, sector = category, wage_usd = val_num)
@@ -771,11 +705,17 @@ LIV_ECO <- function(layers, subgoal) {
 
 
   ## create scores and rbind to other goal scores
-  scores = rbind(liv_status, liv_trend) %>%
+  scores_liv = rbind(liv_status, liv_trend) %>%
     dplyr::select(region_id,
                   score,
                   dimension,
                   goal)
+  # return all scores
+  return(scores_liv)
+}
+
+ECO<- function(layers) {
+
 
   ## read in data layers
   le_gdp   = SelectLayersData(layers, layers='le_gdp')  %>%
@@ -861,15 +801,25 @@ LIV_ECO <- function(layers, subgoal) {
       score)
 
   ## create scores and rbind to other goal scores
-  score = rbind(eco_status, eco_trend) %>%
+  scores_eco = rbind(eco_status, eco_trend) %>%
     dplyr::select(region_id,
                   score,
                   dimension,
                   goal)
 
+
+
+  # return all scores
+  return(scores_eco)
+
+}
+
+LE = function(scores, layers){
+
+  # calculate LE scores
   s <- scores %>%
     dplyr::filter(goal %in% c('LIV', 'ECO'),
-           dimension %in% c('status', 'trend', 'future', 'score')) %>%
+                  dimension %in% c('status', 'trend', 'future', 'score')) %>%
     dplyr::group_by(region_id, dimension) %>%
     dplyr::summarize(score = mean(score, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
@@ -878,9 +828,8 @@ LIV_ECO <- function(layers, subgoal) {
     dplyr::select(region_id, goal, dimension, score) %>%
     data.frame()
 
-  # return all scores
+  # return scores
   return(rbind(scores, s))
-
 }
 
 ICO <- function(layers) {
@@ -1184,18 +1133,6 @@ HAB <- function(layers) {
 
   scores_HAB<- rbind(scores_hab, trend_hab)
 
-  weights <- hab %>%
-    filter(total_km2 > 0) %>%
-    mutate(boolean = 1) %>%
-    mutate(layer = "element_wts_hab_pres_abs") %>%
-    select(rgn_id, habitat = 'variable' , boolean, layer)
-
-  write.csv(weights,
-            sprintf("temp/element_wts_hab_pres_abs.csv", scen_year),
-            row.names = FALSE)
-
-  layers$data$element_wts_hab_pres_abs <- weights
-
 
   # return scores
   return(scores_HAB)
@@ -1210,7 +1147,7 @@ status <- AlignDataYears(layer_nm = "spp_status", layers_obj = layers) %>%
    dplyr::filter(scenario_year == scen_year) %>%
     dplyr::select(region_id = rgn_id, score) %>%
   dplyr::mutate(dimension = "status") %>%
-  dplyr::mutate(score = score * 100)
+  dplyr::mutate(score = score)
 
   trend <- AlignDataYears(layer_nm = "spp_trend", layers_obj = layers) %>%
   dplyr::select(region_id = rgn_id,
@@ -1242,7 +1179,7 @@ PreGlobalScores <- function(layers, conf, scores) {
   # get regions
   name_region_labels <- conf$config$layer_region_labels
   rgns <- layers$data[[name_region_labels]] %>%
-    dplyr::select(id_num = rgn_id, val_chr = label)
+    dplyr::select(id_num = rgn_id, val_chr = rgn_name)
 
   # limit to just desired regions and global (region_id==0)
   scores <- subset(scores, region_id %in% c(rgns[, 'id_num'], 0))
@@ -1255,7 +1192,7 @@ FinalizeScores <- function(layers, conf, scores) {
   # get regions
   name_region_labels <- conf$config$layer_region_labels
   rgns <- layers$data[[name_region_labels]] %>%
-    dplyr::select(id_num = rgn_id, val_chr = label)
+    dplyr::select(id_num = rgn_id, val_chr = rgn_name)
 
 
   # add NAs to missing combos (region_id, goal, dimension)
